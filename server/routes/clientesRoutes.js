@@ -1,10 +1,10 @@
 const express = require('express');
-const ClienteQueries = require('../queries/queriesCliente.js');  // Ajusta la ruta según tu estructura
+const ClienteQueries = require('../queries/queriesCliente');  // Ajusta la ruta según tu estructura
 
 const router = express.Router();
 
 // Ruta para obtener clientes
-router.get('/asd', async (req, res) => {
+router.get('/', async (req, res) => {
     try {
         const clientes = await ClienteQueries.getClientes(); // Llama a la función que obtiene los clientes
         res.json(clientes); // Devuelve los clientes en formato JSON
@@ -14,49 +14,82 @@ router.get('/asd', async (req, res) => {
     }
 });
 
-// Ruta para obtener clientes con mascotas
-router.get('/', async (req, res) => {
-    try {
-        const clientesConMascotas = await ClienteQueries.getClientesConMascotas(); // Llama a la nueva función
-        res.json(clientesConMascotas); // Devuelve los clientes en formato JSON
-    } catch (error) {
-        console.error('Error al obtener clientes con mascotas:', error);
-        res.status(500).json({ error: 'Error al obtener clientes con mascotas' });
-    }
-});
-
 // Ruta para obtener un cliente con todas sus mascotas
-router.get('/por-id/:id_cliente', async (req, res) => {
-    const { id_cliente } = req.params; // Obtenemos el id_cliente de los parámetros de la URL
-
-    // Validamos si el id_cliente es un número válido, si no, enviamos un error 400
-    if (!id_cliente || isNaN(id_cliente)) {
-        return res.status(400).json({ message: 'ID del cliente no es válido.' });
-    }
-
+router.get('/:id_cliente', async (req, res) => {
+    const { id_cliente } = req.params;
     try {
-        // Llamamos a la función para obtener el cliente con sus mascotas
-        const cliente = await ClienteQueries.getClienteConMascotasPorId(id_cliente);
-
-        // Si no se encuentra el cliente, se envía un error 404
-        if (!cliente) {
-            return res.status(404).json({ message: 'Cliente no encontrado' });
-        }
-
-        // Enviamos la respuesta con los datos del cliente y sus mascotas
-        return res.status(200).json(cliente);
+      const cliente = await ClienteQueries.obtenerClienteConMascotas(id_cliente);
+      if (!cliente) {
+        return res.status(404).json({ message: 'Cliente no encontrado' });
+      }
+      res.status(200).json(cliente);
     } catch (error) {
-        console.error('Error en la ruta de obtener cliente:', error);
-
-        // Si el error es una instancia de Error y contiene un mensaje, lo devolvemos
-        const errorMessage = error instanceof Error ? error.message : 'Hubo un problema al obtener el cliente';
-
-        return res.status(500).json({
-            message: errorMessage,
-            error: error.stack || errorMessage,  // Enviar la traza de error completa si es posible
-        });
+      console.error('Error al obtener cliente con mascotas:', error);
+      res.status(500).json({ message: 'Error al obtener cliente con mascotas', error });
     }
-});
+  });
+
+// Ruta para obtener clientes con mascotas
+router.get('/con-mascotas', async (req, res) => {
+    try {
+      const clientes = await ClienteQueries.getClientesConMascotas();
+      res.status(200).json(clientes); // Envía los datos de los clientes con mascotas en la respuesta
+    } catch (error) {
+      console.error('Error al obtener los clientes con mascotas:', error);
+      res.status(500).json({ error: 'Ocurrió un error al obtener los clientes con mascotas' });
+    }
+  });
+
+// Ruta para buscar clientes por nombre
+router.get('/nombre_cliente/:nombre_cliente', async (req, res) => {
+    const { nombre_cliente } = req.params;  // Obtenemos el parámetro 'nombre_cliente' de la URL
+  
+    if (!nombre_cliente) {
+      return res.status(400).json({ message: 'El nombre del cliente es requerido.' });
+    }
+  
+    try {
+      // Llamamos a la función de la query que busca clientes por nombre
+      const clientes = await ClienteQueries.obtenerClientesPorNombre(nombre_cliente);
+  
+      // Si no encontramos clientes
+      if (clientes.length === 0) {
+        return res.status(404).json({ message: 'No se encontraron clientes con ese nombre.' });
+      }
+  
+      // Si encontramos clientes, devolvemos los resultados
+      res.status(200).json(clientes);
+      
+    } catch (error) {
+      console.error('Error al obtener clientes por nombre:', error);
+      res.status(500).json({ message: 'Error al obtener clientes', error });
+    }
+  });
+
+
+// Ruta para buscar clientes por telefono
+router.get('/telefono/:telefono', async (req, res) => {
+    const { telefono } = req.params;  // Obtenemos el teléfono de la URL
+  
+    if (!telefono) {
+      return res.status(400).json({ message: 'El teléfono del cliente es requerido.' });
+    }
+  
+    try {
+      // Llamamos a la función de la query que busca clientes por teléfono
+      const clientes = await ClienteQueries.obtenerClientesPorTelefono(telefono);
+  
+      if (clientes.length === 0) {
+        return res.status(404).json({ message: 'No se encontraron clientes con ese teléfono.' });
+      }
+  
+      res.status(200).json(clientes);
+    } catch (error) {
+      console.error('Error al obtener clientes por teléfono:', error.message);  // Agregar error.message
+      console.error(error);  // Agregar más detalles del error
+      res.status(500).json({ message: 'Error al obtener clientes', error: error.message });
+    }
+  });
 
 // Ruta para crear cliente
 router.post('/', async (req, res) => {

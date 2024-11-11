@@ -1,10 +1,11 @@
-const Cliente = require('../models/Clientes');  // Asegúrate de que la ruta sea correcta
-const Mascota = require('../models/Mascotas');
+const { Op } = require('sequelize');
+const Clientes = require('../models/Clientes');  // Asegúrate de que la ruta sea correcta
+const Mascotas = require('../models/Mascotas');
 
 // Función para obtener todos los clientes
 const getClientes = async () => {
   try {
-    const clientes = await Cliente.findAll({ raw: true });
+    const clientes = await Clientes.findAll({ raw: true });
     return clientes; // Devuelve los clientes obtenidos
   } catch (error) {
     console.error('Error al obtener clientes:', error);
@@ -15,11 +16,11 @@ const getClientes = async () => {
 // Función para obtener todos los clientes con sus mascotas
 const getClientesConMascotas = async () => {
   try {
-    const clientes = await Cliente.findAll({
+    const clientes = await Clientes.findAll({
       include: [
         {
-          model: Mascota,
-          attributes: ['id_mascota', 'nombre_mascota', 'especie', 'raza', 'color'], // Selecciona solo los campos que deseas de Mascota
+          model: Mascotas,
+          attributes: ['id_mascota', 'nombre_mascota', 'id_especie', 'id_raza', 'id_color'], // Selecciona solo los campos que deseas de Mascota
           required: false,
         },
       ],
@@ -32,38 +33,86 @@ const getClientesConMascotas = async () => {
 };
 
 // Función para obtener un solo cliente con todas sus mascotas
-const getClienteConMascotasPorId = async (id_cliente) => {
+const obtenerClienteConMascotas = async (id_cliente) => {
   try {
-    // Buscamos el cliente por su id_cliente, e incluimos sus mascotas con los campos especificados
-    const cliente = await Cliente.findOne({
-      where: { id_cliente: id_cliente }, // Filtramos por id_cliente
+    // Buscar el cliente por id_cliente e incluir todas las mascotas asociadas
+    const cliente = await Clientes.findOne({
+      where: { id_cliente },
+      include: [{
+        model: Mascotas,
+        as: 'Mascotas',  // Este 'as' es opcional si es el nombre de la asociación en associations.js
+        required: false,  // Esto asegura que si no hay mascotas, el cliente aún se devuelve
+      }],
+    });
+
+    if (!cliente) {
+      return { mensaje: 'Cliente no encontrado' };
+    }
+
+    return cliente; // Devuelve el cliente con sus mascotas asociadas
+  } catch (error) {
+    console.error('Error al obtener cliente con mascotas:', error);
+    throw new Error('Error al obtener cliente con mascotas');
+  }
+};
+
+// Función para buscar clientes por su nombre
+const obtenerClientesPorNombre = async (nombre_cliente) => {
+  try {
+    const clientes = await Clientes.findAll({
+      where: {
+        nombre_cliente: {
+          [Op.like]: `%${nombre_cliente}%`,  // Usamos el operador LIKE para búsqueda parcial
+        },
+      },
       include: [
         {
-          model: Mascota,  // Relacionamos el modelo Mascota
-          attributes: ['id_mascota', 'nombre_mascota', 'id_especie', 'id_raza', 'id_color'], // Solo los campos que deseas mostrar de las mascotas
-          // required: false, // Esto es para permitir clientes sin mascotas (si lo necesitas)
+          model: Mascotas,  // Incluimos las mascotas asociadas
+          required: false,   // Queremos que los clientes sin mascotas también se incluyan
         },
       ],
     });
 
-    // Si no se encuentra el cliente, lanzamos un error
-    if (!cliente) {
-      throw new Error('Cliente no encontrado');
-    }
-
-    // Retornamos el cliente con las mascotas asociadas (en formato JSON)
-    return cliente.toJSON();
+    return clientes;  // Devolvemos los clientes encontrados
   } catch (error) {
-    console.error('Error al obtener cliente con mascotas:', error);
-    throw error;  // Lanza el error para ser manejado por el llamador
+    console.error('Error al obtener clientes por nombre:', error);
+    throw new Error('Error al obtener clientes');
   }
 };
+
+
+// Función para buscar clientes por su telefono
+const obtenerClientesPorTelefono = async (telefono) => {
+  try {
+    const clientes = await Clientes.findAll({
+      where: {
+        telefono: {
+          [Op.like]: `${telefono}%`,  // Usamos el operador LIKE para búsqueda parcial por teléfono
+        },
+      },
+      include: [
+        {
+          model: Mascotas,  // Incluimos las mascotas asociadas
+          required: false,   // Queremos que los clientes sin mascotas también se incluyan
+        },
+      ],
+    });
+
+    return clientes;  // Devolvemos los clientes encontrados
+  } catch (error) {
+    console.error('Error al obtener clientes por teléfono:', error);
+    throw new Error('Error al obtener clientes');
+  }
+};
+
+
+
 
 // Función para crear un cliente
 const createCliente = async (nombre_cliente, telefono, direccion, cumpleanos, observaciones) => {
   try {
     // Intentamos crear un nuevo cliente
-    const clientes = await Cliente.create({ nombre_cliente, telefono, direccion, cumpleanos, observaciones });
+    const clientes = await Clientes.create({ nombre_cliente, telefono, direccion, cumpleanos, observaciones });
     
     // Retornamos el cliente creado en formato JSON
     return clientes.toJSON();
@@ -79,7 +128,7 @@ const createCliente = async (nombre_cliente, telefono, direccion, cumpleanos, ob
 // Función para actualizar un cliente
 const updateCliente = async (id_cliente, nombre_cliente, telefono, direccion, cumpleanos, observaciones) => {
   try {
-    const cliente = await Cliente.findByPk(id_cliente);
+    const cliente = await Clientes.findByPk(id_cliente);
     if (!cliente) {
       throw new Error('Cliente no encontrado');
     }
@@ -98,7 +147,7 @@ const updateCliente = async (id_cliente, nombre_cliente, telefono, direccion, cu
 // Función para eliminar un cliente
 const deleteCliente = async (id_cliente) => {
   try {
-    const deletedCliente = await Cliente.destroy({
+    const deletedCliente = await Clientes.destroy({
       where: { id_cliente },
     });
 
@@ -115,8 +164,10 @@ const deleteCliente = async (id_cliente) => {
 module.exports = {
   getClientes,
   getClientesConMascotas,
-  getClienteConMascotasPorId,
+  obtenerClienteConMascotas,
   createCliente,
   updateCliente,
-  deleteCliente
+  deleteCliente,
+  obtenerClientesPorNombre,
+  obtenerClientesPorTelefono
 };

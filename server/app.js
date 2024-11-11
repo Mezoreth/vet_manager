@@ -3,11 +3,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-
 var indexRouter = require("./routes/index");
-var usersRouter = require("./routes/users");
-
-
 const sequelize = require('./database/database');
 const Clientes = require('./models/Clientes');
 const Mascotas = require('./models/Mascotas');
@@ -23,13 +19,12 @@ const Detalle_Ventas = require('./models/Detalle_Ventas');
 const ProductosPetshop = require('./models/ProductosPetshop');
 const Usuarios = require('./models/Usuarios');
 require('./models/associations');
-const clientesRoutes = require('./routes/clientesRoutes');
 const cors = require('cors');  
 var app = express();
 
-
-app.use('/api/clientes', clientesRoutes);
 app.use(cors()); 
+app.use('/api', indexRouter);
+
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "jade");

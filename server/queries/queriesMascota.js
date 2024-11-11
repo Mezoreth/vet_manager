@@ -1,8 +1,8 @@
-import Clientes from '../models/Clientes.js';
-import Mascotas from '../models/Mascotas.js';
+const Clientes = require('../models/Clientes.js');  // Usamos require en lugar de import
+const Mascotas = require('../models/Mascotas.js');  // Usamos require en lugar de import
 
 // Función para crear Mascotas
-export const createMascota = async (nombre_mascota, especie, raza, color, sexo, fecha_nacimiento, reproductor, castrado, fecha_castramiento, fallecimiento, observaciones, id_cliente) => {
+const createMascota = async (nombre_mascota, especie, raza, color, sexo, fecha_nacimiento, reproductor, castrado, fecha_castramiento, fallecimiento, observaciones, id_cliente) => {
   try {
     // Intentamos crear una nueva mascota
     const mascotas = await Mascotas.create({ 
@@ -31,11 +31,8 @@ export const createMascota = async (nombre_mascota, especie, raza, color, sexo, 
   }
 };
 
-
-
-
 // Función para obtener todas las Mascotas
-export const getMascotas = async () => {
+const getMascotas = async () => {
   try {
     // Obtener todas las mascotas, sin ninguna condición
     const mascotas = await Mascotas.findAll({ raw: true });
@@ -47,7 +44,7 @@ export const getMascotas = async () => {
 };
 
 // Función para obtener todas las mascotas de un cliente específico
-export const getMascotasPorCliente = async (id_cliente) => {
+const getMascotasPorCliente = async (id_cliente) => {
   try {
     // Realizamos la consulta para obtener todas las mascotas asociadas al cliente
     const mascotas = await Mascotas.findAll({
@@ -63,8 +60,8 @@ export const getMascotasPorCliente = async (id_cliente) => {
   }
 };
 
-//Funcion para actualizar mascota
-export const updateMascota = async (id_mascota, nombre_mascota, especie, raza, color, sexo, fecha_nacimiento, reproductor, castrado, fecha_castramiento, fallecimiento, observaciones, id_cliente) => {
+// Función para actualizar mascota
+const updateMascota = async (id_mascota, nombre_mascota, especie, raza, color, sexo, fecha_nacimiento, reproductor, castrado, fecha_castramiento, fallecimiento, observaciones, id_cliente) => {
   try {
     // Intentamos encontrar la mascota por su id
     const mascota = await Mascotas.findOne({
@@ -124,8 +121,8 @@ export const updateMascota = async (id_mascota, nombre_mascota, especie, raza, c
   }
 };
 
-//Funcion para eliminar mascota
-export const deleteMascota = async (id_mascota) => {
+// Función para eliminar mascota
+const deleteMascota = async (id_mascota) => {
   try {
     const deletedMascota = await Mascotas.destroy({
       where: { id_mascota },
@@ -139,4 +136,13 @@ export const deleteMascota = async (id_mascota) => {
   } catch (error) {
     return { message: 'Error al eliminar la mascota en la query', error };
   }
+};
+
+// Exportar todas las funciones para usarlas en otros archivos
+module.exports = {
+  createMascota,
+  getMascotas,
+  getMascotasPorCliente,
+  updateMascota,
+  deleteMascota,
 };

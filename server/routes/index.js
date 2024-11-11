@@ -1,9 +1,12 @@
-var express = require("express");
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-/* GET /api/message */
-router.get("/message", function (req, res, next) {
-  res.json("Hello from the API!");
-});
+// Importar rutas de diferentes archivos
+const clientesRoutes = require('./clientesRoutes');
+const mascotasRoutes = require('./mascotasRoutes');
+
+// Usar las rutas en el router principal
+router.use('/clientes', clientesRoutes);
+router.use('/mascotas', mascotasRoutes);
 
 module.exports = router;
