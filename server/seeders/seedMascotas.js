@@ -4,7 +4,7 @@ const Cliente = require('../models/Clientes.js');  // Importamos el modelo Clien
 const Especies = require('../models/Especies.js');
 const Razas = require('../models/Razas.js');
 const Colores = require('../models/Colores.js');  // Asegúrate de que la ruta sea correcta
-
+const Servicios = require('../models/Servicios.js'); 
 // node seeders/seedMascotas.js
 
 const crearMascotasPrueba = async () => {
@@ -14,6 +14,7 @@ const crearMascotasPrueba = async () => {
     const especies = await Especies.findAll();
     const razas = await Razas.findAll();
     const colores = await Colores.findAll();
+    const servicios = await Servicios.findAll();
 
     if (clientes.length === 0) {
       console.log('No hay clientes en la base de datos.');
@@ -33,7 +34,7 @@ const crearMascotasPrueba = async () => {
       const fecha_castramiento = faker.datatype.boolean() ? faker.date.past(2).toISOString().split('T')[0] : null;  // Fecha de castración, si aplica
       const observaciones = faker.lorem.sentence();  // Observaciones aleatorias
       const id_cliente = clientes[faker.number.int({ min: 0, max: clientes.length - 1 })].id_cliente;  // Asignamos un cliente aleatorio a la mascota
-
+      const id_servicio = servicios[faker.number.int({ min: 0, max: servicios.length - 1 })].id_servicio;
       mascotas.push({
         nombre_mascota: nombre_mascota.length > 100 ? nombre_mascota.substring(0, 100) : nombre_mascota,  // Limita el nombre de la mascota a 100 caracteres
         id_especie: id_especie,  // Especie
@@ -46,7 +47,8 @@ const crearMascotasPrueba = async () => {
         fecha_castramiento: fecha_castramiento,  // Fecha de castración (si aplica)
         fallecimiento: faker.datatype.boolean(),  // Genera un valor aleatorio (true/false)
         observaciones: observaciones.length > 255 ? observaciones.substring(0, 255) : observaciones,  // Limita las observaciones a 255 caracteres
-        id_cliente: id_cliente  // Asociamos una mascota a un cliente
+        id_cliente: id_cliente,  // Asociamos una mascota a un cliente
+        id_servicio: id_servicio
       });
     }
 

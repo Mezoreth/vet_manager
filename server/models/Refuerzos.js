@@ -1,34 +1,26 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../database/database'); // Asegúrate de que la ruta sea correcta
 
-class Supresor_Celo extends Model {}
+class Refuerzos extends Model {}
 
-Supresor_Celo.init(
+Refuerzos.init(
   {
-    id_supresor: {
+    id_refuerzo: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       allowNull: false,
       autoIncrement: true,
     },
-    nombre_supresor: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-    },
-    fecha_dosis: {
+    fecha_refuerzo: {
         type: DataTypes.DATEONLY,
-    },
-    id_refuerzo: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
     },
   },
   {
     sequelize,
-    modelName: 'Supresor_Celo',
+    modelName: 'Refuerzos',
     timestamps: false,
   }
 );
 
 // Exportar el modelo para su uso en otras partes de la aplicación
-module.exports = Supresor_Celo;
+module.exports = Refuerzos;

@@ -92,3 +92,11 @@ Ventas.belongsTo(Clientes, {
 
 // USUARIOS
 Usuarios.hasMany(Consultas, { foreignKey: 'id_usuario' });
+
+//DESPARASITACIONES
+
+//VACUNAS
+
+//SUPRESOR_CELO
+
+//REFUERZOS

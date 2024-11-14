@@ -2,14 +2,14 @@ const Clientes = require('../models/Clientes.js');  // Usamos require en lugar d
 const Mascotas = require('../models/Mascotas.js');  // Usamos require en lugar de import
 
 // Función para crear Mascotas
-const createMascota = async (nombre_mascota, especie, raza, color, sexo, fecha_nacimiento, reproductor, castrado, fecha_castramiento, fallecimiento, observaciones, id_cliente) => {
+const createMascota = async (nombre_mascota, id_especie, id_raza, id_color, sexo, fecha_nacimiento, reproductor, castrado, fecha_castramiento, fallecimiento, observaciones, id_cliente, id_servicio) => {
   try {
     // Intentamos crear una nueva mascota
     const mascotas = await Mascotas.create({ 
       nombre_mascota, 
-      especie, 
-      raza, 
-      color, 
+      id_especie, 
+      id_raza, 
+      id_color, 
       sexo, 
       fecha_nacimiento, 
       reproductor, 
@@ -17,7 +17,8 @@ const createMascota = async (nombre_mascota, especie, raza, color, sexo, fecha_n
       fecha_castramiento, 
       fallecimiento, 
       observaciones, 
-      id_cliente 
+      id_cliente,
+      id_servicio 
     });
     
     // Retornamos la mascota creada
@@ -43,22 +44,7 @@ const getMascotas = async () => {
   }
 };
 
-// Función para obtener todas las mascotas de un cliente específico
-const getMascotasPorCliente = async (id_cliente) => {
-  try {
-    // Realizamos la consulta para obtener todas las mascotas asociadas al cliente
-    const mascotas = await Mascotas.findAll({
-      where: {
-        id_cliente: id_cliente  // Filtramos las mascotas por id_cliente
-      }
-    });
 
-    return mascotas;  // Devuelve las mascotas encontradas
-  } catch (error) {
-    console.error('Error al obtener las mascotas por cliente:', error);
-    throw error;  // Si hay un error, lo lanzamos para que sea capturado por el catch en la ruta
-  }
-};
 
 // Función para actualizar mascota
 const updateMascota = async (id_mascota, nombre_mascota, especie, raza, color, sexo, fecha_nacimiento, reproductor, castrado, fecha_castramiento, fallecimiento, observaciones, id_cliente) => {
@@ -142,7 +128,32 @@ const deleteMascota = async (id_mascota) => {
 module.exports = {
   createMascota,
   getMascotas,
-  getMascotasPorCliente,
   updateMascota,
   deleteMascota,
 };
+
+
+
+
+
+
+
+
+
+/*
+// Función para obtener todas las mascotas de un cliente específico
+const getMascotasPorCliente = async (id_cliente) => {
+  try {
+    // Realizamos la consulta para obtener todas las mascotas asociadas al cliente
+    const mascotas = await Mascotas.findAll({
+      where: {
+        id_cliente: id_cliente  // Filtramos las mascotas por id_cliente
+      }
+    });
+
+    return mascotas;  // Devuelve las mascotas encontradas
+  } catch (error) {
+    console.error('Error al obtener las mascotas por cliente:', error);
+    throw error;  // Si hay un error, lo lanzamos para que sea capturado por el catch en la ruta
+  }
+};*/

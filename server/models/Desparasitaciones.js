@@ -1,17 +1,17 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../database/database'); // Asegúrate de que la ruta sea correcta
 
-class Supresor_Celo extends Model {}
+class Desparasitaciones extends Model {}
 
-Supresor_Celo.init(
+Desparasitaciones.init(
   {
-    id_supresor: {
+    id_desparasitacion: {
       type: DataTypes.INTEGER,
       primaryKey: true,
       allowNull: false,
       autoIncrement: true,
     },
-    nombre_supresor: {
+    nombre_desparasitacion: {
       type: DataTypes.STRING(100),
       allowNull: false,
     },
@@ -19,16 +19,15 @@ Supresor_Celo.init(
         type: DataTypes.DATEONLY,
     },
     id_refuerzo: {
-        type: DataTypes.INTEGER,
-        allowNull: true,
+        type: DataTypes.DATEONLY,
     },
   },
   {
     sequelize,
-    modelName: 'Supresor_Celo',
+    modelName: 'Desparasitaciones',
     timestamps: false,
   }
 );
 
 // Exportar el modelo para su uso en otras partes de la aplicación
-module.exports = Supresor_Celo;
+module.exports = Desparasitaciones;
