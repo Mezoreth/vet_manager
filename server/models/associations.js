@@ -1,75 +1,97 @@
 const Clientes = require('./Clientes');
 const Mascotas = require('./Mascotas');
-const Colores = require('./Colores');
-const Razas = require('./Razas');
-const Especies = require('./Especies');
 const Medicamentos = require('./Medicamentos');
 const Servicios = require('./Servicios');
 const Tratamientos = require('./Tratamientos');
-const Consultas = require('./Consultas');
 const Ventas = require('./Ventas');
 const Detalle_Ventas = require('./Detalle_Ventas');
-const ProductosPetshop = require('./ProductosPetshop');
+const Productos = require('./Productos');
 const Usuarios = require('./Usuarios');
+const Mascotas_Medicamentos = require('./Mascotas_Medicamentos');
+const Mascotas_Caracteristicas = require('./Mascotas_Caracteristicas');
+const Mascotas_Servicios = require('./Mascotas_Servicios');
+const Clientes_Servicios = require('./Clientes_Servicios');
+const Caracteristicas = require('./Caracteristicas');
+const Refuerzos = require('./Refuerzos');
+
 
 // CLIENTES
 Clientes.hasMany(Mascotas, { foreignKey: 'id_cliente' });
+
 Clientes.hasMany(Ventas, { foreignKey: 'id_cliente' });
+
+Clientes.belongsToMany(Servicios, {
+  through: Clientes_Servicios,
+  as: 'servicios1',
+  foreignKey: 'id_cliente',
+  onDelete: 'SET NULL',
+});
 
 // MASCOTAS
 Mascotas.hasMany(Tratamientos, { foreignKey: 'id_mascota' });
-Mascotas.hasMany(Consultas, { foreignKey: 'id_mascota' });
+
+Mascotas.belongsToMany(Medicamentos, {
+  through: Mascotas_Medicamentos,
+  as: 'medicamentos',
+  foreignKey: 'id_mascota',
+  onDelete: 'SET NULL',
+});
 
 Mascotas.belongsTo(Clientes, { 
   foreignKey: 'id_cliente',
   onDelete: 'SET NULL',
 });
 
-Mascotas.belongsTo(Razas, { 
-  foreignKey: 'id_raza',
-  onDelete: 'SET NULL',
-});
-
-Mascotas.belongsTo(Especies, { 
-  foreignKey: 'id_especie',
-  onDelete: 'SET NULL',
-});
-
-Mascotas.belongsTo(Colores, { 
-  foreignKey: 'id_color',
-  onDelete: 'SET NULL',
-});
-
-Mascotas.belongsTo(Servicios, { 
-  foreignKey: 'id_servicio',
-  onDelete: 'SET NULL',
-});
-
-// SERVICIOS
-Servicios.hasMany(Mascotas, { foreignKey: 'id_servicio' });
-
-// ESPECIES
-Especies.hasMany(Mascotas, { foreignKey: 'id_especie' });
-
-// COLORES
-Colores.hasMany(Mascotas, { foreignKey: 'id_color' });
-
-// RAZAS
-Razas.hasMany(Mascotas, { foreignKey: 'id_raza' });
-
-// CONSULTAS
-Consultas.belongsTo(Usuarios, { 
-  foreignKey: 'id_usuario',
-  onDelete: 'SET NULL',
-});
-
-Consultas.belongsTo(Mascotas, { 
+Mascotas.belongsToMany(Servicios, {
+  through: Mascotas_Servicios,
+  as: 'servicios',
   foreignKey: 'id_mascota',
   onDelete: 'SET NULL',
 });
 
-Consultas.belongsTo(Ventas, { 
-  foreignKey: 'id_venta',
+Mascotas.belongsToMany(Caracteristicas, {
+  through: Mascotas_Caracteristicas,
+  as: 'caracteristicas',
+  foreignKey: 'id_mascota',
+  onDelete: 'SET NULL',
+});
+
+//Caracteristicas
+Caracteristicas.belongsToMany(Mascotas, {
+  through: Mascotas_Caracteristicas,
+  as: 'mascotas2',
+  foreignKey: 'id_caracteristica',
+  onDelete: 'SET NULL',
+});
+
+//MEDICAMENTOS 
+Medicamentos.belongsToMany(Mascotas, {
+  through: Mascotas_Medicamentos,
+  as: 'mascotas',
+  foreignKey: 'id_medicamento',
+  onDelete: 'SET NULL',
+})
+
+//DOSIS
+Mascotas_Medicamentos.hasMany(Refuerzos, { foreignKey: 'id_mascotaMedicamento' });
+
+//REFUERZOS
+Refuerzos.belongsTo(Mascotas_Medicamentos, { 
+  foreignKey: 'id_mascotaMedicamento',
+  onDelete: 'SET NULL',
+});
+// SERVICIOS
+Servicios.belongsToMany(Mascotas, {
+  through: Mascotas_Servicios,
+  as: 'mascotas1',
+  foreignKey: 'id_servicio',
+  onDelete: 'SET NULL',
+});
+
+Servicios.belongsToMany(Clientes, {
+  through: Clientes_Servicios,
+  as: 'clientes',
+  foreignKey: 'id_servicios',
   onDelete: 'SET NULL',
 });
 
@@ -79,10 +101,6 @@ Tratamientos.belongsTo(Mascotas, {
   onDelete: 'SET NULL',
 });
 
-Tratamientos.belongsTo(Consultas, { 
-  foreignKey: 'id_consulta',
-  onDelete: 'SET NULL',
-});
 
 // VENTAS
 Ventas.belongsTo(Clientes, { 
@@ -90,13 +108,5 @@ Ventas.belongsTo(Clientes, {
   onDelete: 'SET NULL',
 });
 
-// USUARIOS
-Usuarios.hasMany(Consultas, { foreignKey: 'id_usuario' });
 
-//DESPARASITACIONES
 
-//VACUNAS
-
-//SUPRESOR_CELO
-
-//REFUERZOS

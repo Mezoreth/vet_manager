@@ -1,9 +1,9 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../database/database'); // Asegúrate de que la ruta sea correcta
 
-class ProductosPetshop extends Model {}
+class Productos extends Model {}
 
-ProductosPetshop.init(
+Productos.init(
   {
     id_producto: {
       type: DataTypes.INTEGER,
@@ -32,10 +32,10 @@ ProductosPetshop.init(
   },
   {
     sequelize,
-    modelName: 'ProductosPetshop',
+    modelName: 'Productos',
     timestamps: false,
   }
 );
 
 // Exportar el modelo para su uso en otras partes de la aplicación
-module.exports = ProductosPetshop;
+module.exports = Productos;

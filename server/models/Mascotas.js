@@ -15,18 +15,6 @@ Mascotas.init(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
-    id_especie: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    id_raza: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
-    id_color: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
     sexo: {
       type: DataTypes.STRING(10),
     },
@@ -54,11 +42,6 @@ Mascotas.init(
     id_cliente: {
       type: DataTypes.INTEGER,
       allowNull: true,
-    },
-    id_servicio: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-
     },
   },
   {

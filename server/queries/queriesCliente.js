@@ -87,7 +87,7 @@ const obtenerClientesPorTelefono = async (telefono) => {
     const clientes = await Clientes.findAll({
       where: {
         telefono: {
-          [Op.like]: `${telefono}%`,  // Usamos el operador LIKE para búsqueda parcial por teléfono
+          [Op.like]: `%${telefono}%`,  // Usamos el operador LIKE para búsqueda parcial por teléfono
         },
       },
       include: [

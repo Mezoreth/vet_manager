@@ -14,6 +14,10 @@ Refuerzos.init(
     fecha_refuerzo: {
         type: DataTypes.DATEONLY,
     },
+    id_mascotaMedicamento: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
   },
   {
     sequelize,

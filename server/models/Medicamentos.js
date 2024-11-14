@@ -19,6 +19,10 @@ Medicamentos.init(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
+    tipo_unidad: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
     composicion: {
       type: DataTypes.TEXT,
     },
