@@ -20,8 +20,8 @@ const crearMascotasPrueba = async () => {
       const cliente = faker.helpers.arrayElement(clientes); // Selecciona un cliente aleatorio
 
       // Generar datos reales para la mascota
-      const nombreMascota = faker.animal.petName(); // Nombre de la mascota
-      const sexo = faker.helpers.arrayElement(['Macho', 'Hembra']); // Sexo de la mascota
+      const nombreMascota = faker.animal.petName().toUpperCase(); // Nombre de la mascota
+      const sexo = faker.helpers.arrayElement(['M', 'H']); // Sexo de la mascota
       const fechaNacimiento = faker.date.past(5, new Date()); // Fecha de nacimiento (hace 5 años o menos)
       const castrado = faker.datatype.boolean(); // Castrado o no
       const reproductor = !castrado && faker.datatype.boolean(); // Si no está castrado, puede ser reproductor
@@ -33,7 +33,7 @@ const crearMascotasPrueba = async () => {
       const fallecimiento = faker.datatype.boolean();
 
       // Observaciones: 70% de probabilidades de tener observaciones reales, 30% null
-      const observaciones = Math.random() < 0.7 ? faker.lorem.sentence() : null;
+      const observaciones = Math.random() < 0.7 ? faker.lorem.sentence().toUpperCase() : null;
 
       // Crear la mascota
       await Mascotas.create({
@@ -58,4 +58,4 @@ const crearMascotasPrueba = async () => {
 };
 
 // Ejecutamos la función
-crearMascotasPrueba();
+module.exports = crearMascotasPrueba;

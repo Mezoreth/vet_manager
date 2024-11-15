@@ -5,25 +5,17 @@ const Cliente = require('../models/Clientes');  // Cambiado de import a require
 
 const crearClientesPrueba = async () => {
   try {
-    // Crear un cliente de prueba con datos fijos
-    await Cliente.create({
-      nombre_cliente: 'Juan Pérez',
-      telefono: '123456789',
-      direccion: 'Calle Falsa 123, Ciudad',
-      cumpleanos: '1990-05-15',
-      observaciones: 'Cliente frecuente'
-    });
 
     // Crear clientes de prueba con datos aleatorios utilizando Faker
     const clientes = [];
     
-    for (let i = 0; i < 99; i++) {
-      const nombre = faker.person.fullName();
-      const telefono = faker.phone.number().replace(/\D/g, '');;
-      const direccion = faker.location.streetAddress();
+    for (let i = 0; i < 100; i++) {
+      const nombre = faker.person.fullName().toUpperCase();
+      const telefono = faker.number.int({ min: 69600000, max: 99999999 });
+      const direccion = faker.location.streetAddress().toUpperCase();
       const cumpleanos = faker.date.past(30).toISOString().split('T')[0]; // Fecha en formato YYYY-MM-DD
       const asignarObservaciones = Math.random() < 0.7;
-      const observaciones = asignarObservaciones ? faker.lorem.sentence() : null;
+      const observaciones = asignarObservaciones ? faker.lorem.sentence().toUpperCase() : null;
       
       clientes.push({
         nombre_cliente: nombre.length > 100 ? nombre.substring(0, 100) : nombre,  // Limita a 100 caracteres
@@ -44,4 +36,4 @@ const crearClientesPrueba = async () => {
 };
 
 // Ejecutamos la función
-crearClientesPrueba();
+module.exports = crearClientesPrueba;

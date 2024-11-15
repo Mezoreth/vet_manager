@@ -1,40 +1,30 @@
-const fs = require('fs');
-const path = require('path');
+const seedClientes = require('./seedClientes');
+const seedCaracteristicas = require('./seedCaracteristicas');
+const seedMascotas = require('./seedMascotas');
+const seedMascotas_Caracteristicas = require('./seedMascotas_Caracteristicas');
 
-// Directorio donde se encuentran los archivos de seeders
-const seedersDir = path.join(__dirname, 'seeders');
-
-// Lista con el orden específico de los archivos
-const seedersOrdenados = [
-  'seedClientes.js',  // Primero ejecutar el seeder de clientes
-  'seedCaracteristicas.js',
-  'seedMascotas.js', 
-  'seedMedicamentos.js', 
-  'seedMascotas_Medicamentos.js',
-  'seedServicios.js',
-  'seedMascotas_Servicios.js',
-  'seedClientes_Servicios.js',
-];
-
-// Función que ejecuta los seeders en el orden especificado
-const ejecutarSeeders = async () => {
+// node seeders/seedAll.js
+const runSeeds = async () => {
   try {
-    for (const seederFile of seedersOrdenados) {
-      const rutaSeeder = path.join(seedersDir, seederFile);
-      if (fs.existsSync(rutaSeeder)) {
-        console.log(`Ejecutando el seeder: ${seederFile}`);
-        const { crearClientesPrueba } = require(rutaSeeder);  // Asegúrate de que cada archivo exporte una función
-        await crearClientesPrueba();  // Ejecuta la función correspondiente
-      } else {
-        console.warn(`El archivo ${seederFile} no existe en el directorio de seeders.`);
-      }
-    }
+    console.log("Iniciando los seeds...");
 
-    console.log('Todos los seeders han sido ejecutados con éxito');
+    // Ejecutar los seeders secuencialmente
+    await seedClientes();  // Primero, insertar los clientes
+    console.log("Clientes insertados correctamente.");
+
+    await seedCaracteristicas();  // Luego, insertar las características
+    console.log("Características insertadas correctamente.");
+
+    await seedMascotas();  // Después, insertar las mascotas
+    console.log("Mascotas insertadas correctamente.");
+
+    await seedMascotas_Caracteristicas();  // Finalmente, insertar las características de las mascotas
+    console.log("Características de mascotas insertadas correctamente.");
+
+    console.log("Todos los datos de prueba se han insertado correctamente.");
   } catch (error) {
-    console.error('Error al ejecutar los seeders:', error);
+    console.error("Error ejecutando los seeds:", error);
   }
 };
 
-// Ejecutar los seeders
-ejecutarSeeders();
+runSeeds();

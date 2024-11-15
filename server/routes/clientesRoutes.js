@@ -95,10 +95,10 @@ router.get('/telefono/:telefono', async (req, res) => {
 router.post('/', async (req, res) => {
   //console.log('Datos recibidos');
   //console.log(JSON.stringify(req.body));
-  var { nombre_cliente, telefono, direccion, cumpleanos, observaciones='' } = req.body;
   //cumpleanos = cumpleanos === "" ? null : cumpleanos;
   //console.log('nombre'+ nombre_cliente+' telefono: '+telefono+'direccion' + direccion+ ' cumpleaños: '+ typeof cumpleanos+ ' obs'+observaciones)
     try {
+        var { nombre_cliente, telefono, direccion, cumpleanos, observaciones='' } = req.body;
         const nuevoCliente = await ClienteQueries.createCliente(nombre_cliente, telefono, direccion, cumpleanos, observaciones);
         res.status(201).json(nuevoCliente);
     } catch (error) {
@@ -109,10 +109,11 @@ router.post('/', async (req, res) => {
 
 // Ruta para actualizar un cliente
 router.put('/:id_cliente', async (req, res) => {
-    const { id_cliente } = req.params; // Obtenemos el id_cliente desde los parámetros de la URL
-    const { nombre_cliente, telefono, direccion, cumpleanos, observaciones } = req.body; // Obtenemos los datos desde el cuerpo de la solicitud
+   
   
     try {
+        const { id_cliente } = req.params; // Obtenemos el id_cliente desde los parámetros de la URL
+        const { nombre_cliente, telefono, direccion, cumpleanos, observaciones } = req.body; // Obtenemos los datos desde el cuerpo de la solicitud
         // Llamamos a la función updateCliente para actualizar los datos del cliente
         const clienteActualizado = await ClienteQueries.updateCliente(id_cliente, nombre_cliente, telefono, direccion, cumpleanos, observaciones);
   
@@ -126,10 +127,9 @@ router.put('/:id_cliente', async (req, res) => {
 });
 
 // Ruta para eliminar un cliente
-router.delete('/:id_cliente', async (req, res) => {
-    const { id_cliente } = req.params;  // Obtener el id_cliente desde los parámetros de la URL
-    
+router.delete('/:id_cliente', async (req, res) => {    
     try {
+        const { id_cliente } = req.params;  // Obtener el id_cliente desde los parámetros de la URL
         const result = await ClienteQueries.deleteCliente(id_cliente);  // Llamar a la función deleteCliente
   
         if (result.message === 'Cliente eliminado con éxito') {

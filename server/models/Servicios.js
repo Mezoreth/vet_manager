@@ -46,14 +46,6 @@ Servicios.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    id_mascota: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
-    id_cliente: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
-    },
   },
   {
     sequelize,

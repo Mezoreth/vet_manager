@@ -1,63 +1,77 @@
-const { faker } = require('@faker-js/faker');  // Importar Faker
-const Caracteristicas = require('../models/Caracteristicas');  // Asegúrate de que la ruta sea correcta
+const { faker } = require('@faker-js/faker');  // Usamos faker para generar datos aleatorios
+const Caracteristicas = require('../models/Caracteristicas');  // Modelo Caracteristicas
 
-// node seeders/seedCaracteristicas.js
+// Definir las especies comunes como mascotas
+const especies = [
+  'PERRO', 'GATO', 'CONEJO', 'HAMSTER', 'LORO', 'PEZ', 'TORTUGA', 'IGUANA', 'CANARIO', 'GUINEA PIG'
+];
+
+// Razas por especie
+const razasPorEspecie = {
+  PERRO: ['GOLDEN RETRIEVER', 'LABRADOR', 'BULLDOG', 'PITBULL', 'BEAGLE'],
+  GATO: ['PERSA', 'SIAMÉS', 'BENGALÍ', 'MAINE COON', 'ABISINIO'],
+  CONEJO: ['HIMALAYO', 'ANGORA', 'ENANO', 'CALIFORNIANO', 'HOLANDÉS'],
+  HAMSTER: ['SIRIO', 'ROBOROVSKI', 'DJUNGARIAN'],
+  LORO: ['COTORRA ARGENTINA', 'GUACAMAYO', 'AMAZONAS', 'CACATÚA'],
+  PEZ: ['BETTA', 'GUPPY', 'GOLDFISH', 'NEÓN', 'TILAPIA'],
+  TORTUGA: ['TORTUGA DE TIERRA', 'TORTUGA MARINA', 'TORTUGA DE AGUA DULCE'],
+  IGUANA: ['VERDE', 'ROJA', 'NEGRA', 'MEXICANA', 'CUBANA'],
+  CANARIO: ['AMARILLO', 'BLANCO', 'ROJO', 'VERDE', 'NEGRO'],
+  GUINEA_PIG: ['PERUANO', 'ABISINIO', 'TEXEL', 'CORONET', 'CRESTADO']
+};
+
+// 100 colores aleatorios
+const colores = [
+  'AZUL', 'ROJO', 'VERDE', 'NEGRO', 'BLANCO', 'AMARILLO', 'MORADO', 'NARANJA', 'GRIS', 'MARRÓN', 
+  'PINK', 'CREMA', 'DORADO', 'PLATEADO', 'VIOLETA', 'ROSA', 'INDIGO', 'AZUL MARINO', 'LIMA', 'TURQUESA',
+  'BEIGE', 'AMBAR', 'CIAN', 'FUCHSIA', 'OLIVA', 'CARAMEL', 'MOSTAZA', 'LILA', 'MINT', 'CIELO', 
+  'AZUL CLARO', 'TOMATE', 'JÁSPER', 'PESCA', 'SÁNDALO', 'CORAL', 'BERMELLÓN', 'COBRE', 'CIELO AZUL', 
+  'PAPAYA', 'MELON', 'TURQUESA OSCURO', 'PLOMO', 'TAN', 'ARÁNDANO', 'LAVANDA', 'ALMENDRA', 'PERLA',
+  'LIMA VERDE', 'PEACH', 'TÉ', 'CAFE', 'AMARILLO SUAVE', 'VERDE MENTA', 'AMARILLO DULCE', 'LIMÓN', 
+  'CHOCOLATE', 'CUERO', 'CARAMELIZADO', 'CÍTRICO', 'COCO', 'MANDARINA', 'VINO', 'MAÍZ', 'CORCHO', 
+  'CHAMPÁN', 'HIERBA', 'VERDE OLMO', 'BOLSA', 'ALHELÍ', 'CAOLÍN', 'CELESTE', 'VINO TINTO', 'FRAMBUESA',
+  'FRESA', 'ALBA', 'BLOOM', 'ARÁNDANO AZUL', 'CAFÉ CON LECHE', 'NUBE', 'LAURISILVA', 'PEZ KHALI', 
+  'KERMES', 'VANILLA', 'ROJIZA', 'TIZA', 'NÍVEA', 'TERRA', 'CALIZA', 'MOGNO', 'VUELTA AL MUNDO', 'PANTONE'
+];
 
 const crearCaracteristicasPrueba = async () => {
   try {
-    // Crear características de prueba con datos aleatorios usando Faker
     const caracteristicas = [];
 
-    // Listas de colores, especies y razas por especie
-    const colores = ['azul', 'rojo', 'verde', 'negro', 'blanco', 'amarillo', 'morado'];
-    const especies = ['perro', 'gato', 'conejo', 'hamster', 'loro', 'pez', 'tortuga'];
-
-    // Razas por especie
-    const razasPorEspecie = {
-      perro: ['golden retriever', 'labrador', 'bulldog', 'pitbull', 'beagle'],
-      gato: ['persa', 'siamés', 'bengalí', 'maine coon', 'abisinio'],
-      conejo: ['himalayo', 'angora', 'enano', 'californiano', 'holandés'],
-      hamster: ['sirio', 'roborovski', 'djungarian'],
-      loro: ['cotorra argentina', 'guacamayo', 'amazonas', 'cacatúa'],
-      pez: ['betta', 'guppy', 'goldfish', 'neón', 'tilapia'],
-      tortuga: ['tortuga de tierra', 'tortuga marina', 'tortuga de agua dulce']
-    };
-
-    // Crear 97 características aleatorias
-    for (let i = 0; i < 100; i++) {
-      // Seleccionar aleatoriamente un tipo de característica
-      const tipo = faker.helpers.arrayElement(['color', 'especie', 'raza']);
-      
-      let descripcion;
-      // Asignar una descripción acorde al tipo seleccionado
-      if (tipo === 'color') {
-        descripcion = faker.helpers.arrayElement(colores);  // Selecciona un color aleatorio
-      } else if (tipo === 'especie') {
-        descripcion = faker.helpers.arrayElement(especies);  // Selecciona una especie aleatoria
-      } else if (tipo === 'raza') {
-        // Seleccionamos aleatoriamente una especie
-        const especie = faker.helpers.arrayElement(especies);
-        // Seleccionamos una raza acorde a la especie
-        descripcion = faker.helpers.arrayElement(razasPorEspecie[especie] || []);
-      }
-
-      // Asegurarse de que la descripción no supere los 255 caracteres
-      descripcion = descripcion.length > 255 ? descripcion.substring(0, 255) : descripcion;
-
+    // Crear las especies (ahora con 10 especies de mascotas comunes)
+    especies.forEach((especie) => {
       caracteristicas.push({
-        tipo: tipo,
-        descripcion: descripcion
+        tipo: 'ESPECIE',
+        descripcion: especie.toUpperCase()
       });
-    }
 
-    // Insertar todas las características aleatorias en paralelo
+      // Crear 5 razas para cada especie
+      if (razasPorEspecie[especie]) {
+        razasPorEspecie[especie].forEach((raza) => {
+          caracteristicas.push({
+            tipo: 'RAZA',
+            descripcion: raza.toUpperCase()
+          });
+        });
+      }
+    });
+
+    // Crear 100 colores
+    colores.forEach((color) => {
+      caracteristicas.push({
+        tipo: 'COLOR',
+        descripcion: color.toUpperCase()
+      });
+    });
+
+    // Insertar todas las características en la base de datos
     await Caracteristicas.bulkCreate(caracteristicas);
 
-    console.log('Datos de prueba creados correctamente');
+    console.log(`Datos de prueba creados correctamente. Se insertaron ${caracteristicas.length} características.`);
   } catch (error) {
     console.error('Error creando datos de prueba:', error);
   }
 };
 
 // Ejecutamos la función
-crearCaracteristicasPrueba();
+module.exports = crearCaracteristicasPrueba;

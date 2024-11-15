@@ -1,59 +1,86 @@
-const { faker } = require('@faker-js/faker');
-const Mascotas_Caracteristicas = require('../models/Mascotas_Caracteristicas');
-const Mascotas = require('../models/Mascotas');
-const Caracteristicas = require('../models/Caracteristicas'); // Asegúrate de tener el modelo de Caracteristicas importado
-//  node seeders/seedMascotas_Caracteristicas.js
-// Crear relaciones de características para las mascotas
-const crearMascotasCaracteristicasPrueba = async () => {
+const { faker } = require('@faker-js/faker');  // Usamos faker para generar datos aleatorios
+const Mascotas = require('../models/Mascotas');  // Modelo Mascotas
+const Caracteristicas = require('../models/Caracteristicas');  // Modelo Caracteristicas
+const Mascotas_Caracteristicas = require('../models/Mascotas_Caracteristicas');  // Modelo Mascotas_Caracteristicas
+
+// Especies y razas (ya definidas)
+const especies = [
+  'PERRO', 'GATO', 'CONEJO', 'HAMSTER', 'LORO', 'PEZ', 'TORTUGA', 'IGUANA', 'CANARIO', 'GUINEA PIG'
+];
+
+const razasPorEspecie = {
+  PERRO: ['GOLDEN RETRIEVER', 'LABRADOR', 'BULLDOG', 'PITBULL', 'BEAGLE'],
+  GATO: ['PERSA', 'SIAMÉS', 'BENGALÍ', 'MAINE COON', 'ABISINIO'],
+  CONEJO: ['HIMALAYO', 'ANGORA', 'ENANO', 'CALIFORNIANO', 'HOLANDÉS'],
+  HAMSTER: ['SIRIO', 'ROBOROVSKI', 'DJUNGARIAN'],
+  LORO: ['COTORRA ARGENTINA', 'GUACAMAYO', 'AMAZONAS', 'CACATÚA'],
+  PEZ: ['BETTA', 'GUPPY', 'GOLDFISH', 'NEÓN', 'TILAPIA'],
+  TORTUGA: ['TORTUGA DE TIERRA', 'TORTUGA MARINA', 'TORTUGA DE AGUA DULCE'],
+  IGUANA: ['VERDE', 'ROJA', 'NEGRA', 'MEXICANA', 'CUBANA'],
+  CANARIO: ['AMARILLO', 'BLANCO', 'ROJO', 'VERDE', 'NEGRO'],
+  GUINEA_PIG: ['PERUANO', 'ABISINIO', 'TEXEL', 'CORONET', 'CRESTADO']
+};
+
+const colores = [
+  'AZUL', 'ROJO', 'VERDE', 'NEGRO', 'BLANCO', 'AMARILLO', 'MORADO', 'NARANJA', 'GRIS', 'MARRÓN', 
+  'PINK', 'CREMA', 'DORADO', 'PLATEADO', 'VIOLETA', 'ROSA', 'INDIGO', 'AZUL MARINO', 'LIMA', 'TURQUESA',
+  'BEIGE', 'AMBAR', 'CIAN', 'FUCHSIA', 'OLIVA', 'CARAMEL', 'MOSTAZA', 'LILA', 'MINT', 'CIELO', 
+  'AZUL CLARO', 'TOMATE', 'JÁSPER', 'PESCA', 'SÁNDALO', 'CORAL', 'BERMELLÓN', 'COBRE', 'CIELO AZUL', 
+  'PAPAYA', 'MELON', 'TURQUESA OSCURO', 'PLOMO', 'TAN', 'ARÁNDANO', 'LAVANDA', 'ALMENDRA', 'PERLA',
+  'LIMA VERDE', 'PEACH', 'TÉ', 'CAFE', 'AMARILLO SUAVE', 'VERDE MENTA', 'AMARILLO DULCE', 'LIMÓN', 
+  'CHOCOLATE', 'CUERO', 'CARAMELIZADO', 'CÍTRICO', 'COCO', 'MANDARINA', 'VINO', 'MAÍZ', 'CORCHO', 
+  'CHAMPÁN', 'HIERBA', 'VERDE OLMO', 'BOLSA', 'ALHELÍ', 'CAOLÍN', 'CELESTE', 'VINO TINTO', 'FRAMBUESA',
+  'FRESA', 'ALBA', 'BLOOM', 'ARÁNDANO AZUL', 'CAFÉ CON LECHE', 'NUBE', 'LAURISILVA', 'PEZ KHALI', 
+  'KERMES', 'VANILLA', 'ROJIZA', 'TIZA', 'NÍVEA', 'TERRA', 'CALIZA', 'MOGNO', 'VUELTA AL MUNDO', 'PANTONE'
+];
+
+const crearMascotasCaracteristicas = async () => {
   try {
-    // Obtener todas las mascotas y todas las características de la base de datos
+    // Obtener todas las mascotas de la base de datos
     const mascotas = await Mascotas.findAll();
-    const caracteristicas = await Caracteristicas.findAll();
 
-    // Verificar que haya suficientes datos para asignar características
-    if (mascotas.length < 1 || caracteristicas.length < 1) {
-      console.log('No hay suficientes datos de mascotas o características en la base de datos.');
-      return;
-    }
+    const mascotasCaracteristicas = [];
 
-    // Para cada mascota, asignar características coherentes
-    for (let i = 0; i < mascotas.length; i++) {
-      const mascota = mascotas[i];
-      const especie = faker.helpers.arrayElement(caracteristicas.filter(c => c.tipo === 'especie'));
-      const color = faker.helpers.arrayElement(caracteristicas.filter(c => c.tipo === 'color'));
-      
-      // Filtrar las razas disponibles según la especie
-      const razasDisponibles = caracteristicas.filter(c => c.tipo === 'raza' && c.descripcion.toLowerCase().includes(especie.descripcion.toLowerCase()));
+    for (const mascota of mascotas) {
+      // Asignar especie aleatoria
+      const especie = faker.helpers.arrayElement(especies);
 
-      // Asegurarse de que haya razas disponibles para la especie
-      if (razasDisponibles.length > 0) {
-        const raza = faker.helpers.arrayElement(razasDisponibles);
-
-        // Crear la relación entre la mascota y sus características
-        await Mascotas_Caracteristicas.create({
-          id_mascota: mascota.id_mascota,
-          id_caracteristica: especie.id_caracteristica, // Especie
-        });
-
-        await Mascotas_Caracteristicas.create({
-          id_mascota: mascota.id_mascota,
-          id_caracteristica: color.id_caracteristica, // Color
-        });
-
-        await Mascotas_Caracteristicas.create({
-          id_mascota: mascota.id_mascota,
-          id_caracteristica: raza.id_caracteristica, // Raza
-        });
-
-        console.log(`Características asignadas a la mascota ${mascota.nombre_mascota}: Especie: ${especie.descripcion}, Color: ${color.descripcion}, Raza: ${raza.descripcion}`);
+      // Asignar raza según la especie (si es necesario)
+      let raza = null;
+      if (razasPorEspecie[especie]) {
+        raza = faker.helpers.arrayElement(razasPorEspecie[especie]);
       }
+
+      // Asignar color aleatorio
+      const color = faker.helpers.arrayElement(colores);
+
+      // Crear características para la mascota
+      mascotasCaracteristicas.push({
+        id_mascota: mascota.id_mascota,
+        id_caracteristica: (await Caracteristicas.findOne({ where: { descripcion: especie, tipo: 'ESPECIE' } })).id_caracteristica,
+      });
+
+      if (raza) {
+        mascotasCaracteristicas.push({
+          id_mascota: mascota.id_mascota,
+          id_caracteristica: (await Caracteristicas.findOne({ where: { descripcion: raza, tipo: 'RAZA' } })).id_caracteristica,
+        });
+      }
+
+      mascotasCaracteristicas.push({
+        id_mascota: mascota.id_mascota,
+        id_caracteristica: (await Caracteristicas.findOne({ where: { descripcion: color, tipo: 'COLOR' } })).id_caracteristica,
+      });
     }
 
-    console.log('Características de mascotas creadas correctamente.');
+    // Insertar todas las características en la tabla de relación
+    await Mascotas_Caracteristicas.bulkCreate(mascotasCaracteristicas);
+
+    console.log(`Datos de características para mascotas creados correctamente. Se insertaron ${mascotasCaracteristicas.length} registros.`);
   } catch (error) {
-    console.error('Error creando las características de las mascotas:', error);
+    console.error('Error creando datos de prueba para MascotasCaracteristicas:', error);
   }
 };
 
-// Ejecutamos la función
-crearMascotasCaracteristicasPrueba();
+// Ejecutar el seeder
+module.exports = crearMascotasCaracteristicas;
