@@ -52,24 +52,25 @@ export default function Inventario() {
 function BasicButtons({ handleClick=()=> {} }) {
       return (
         <ButtonGroup variant='contained' aria-label="Basic button group"  fullWidth sx={{ height:'100%' , alignItems:'center', alignContent:'center', marginTop:2, border:0, bgcolor: (theme) => theme.palette.background.default }}>
-          <Button color= 'success' startIcon={<MedicationLiquidIcon />}  onClick={() => handleClick('med')}>Medicamentos</Button>
-          <Button color= 'info' startIcon={<CategoryIcon />} onClick={() => handleClick('product')} >Productos</Button>
+          <Button color= 'success' startIcon={<MedicationLiquidIcon />}  onClick={() => handleClick('med')}>MEDICAMENTOS FARMACIA</Button>
+          <Button color= 'warning' startIcon={<MedicationLiquidIcon />}  onClick={() => handleClick('med')}>MEDICAMENTOS CONSULTORIO</Button>
+          <Button color= 'info' startIcon={<CategoryIcon />} onClick={() => handleClick('product')} >PET SHOP</Button>
         </ButtonGroup>
       );
     }
 
 function SearchBar() {
-      const [type, setType] = useState('');
+      const [type, setType] = useState('codigo');
       const handleChange = (event) => {
         setType(event.target.value);
       }
       return (
         <Box sx={{ padding: 0.5 ,textAlign: 'center', border:0, bgcolor: (theme) => theme.palette.background.default }} >
         <FormControl sx={{ m: 1, minWidth: 75}}>
-          <Select id="searchtype" onChange={handleChange} displayEmpty defaultValue={'nombre'} sx={{ width: 120, height: 34 ,fontSize: '0.9rem' , padding: '5px' }} >
+          <Select id="searchtype" onChange={handleChange} displayEmpty defaultValue={'codigo'} sx={{ width: 120, height: 34 ,fontSize: '0.9rem' , padding: '5px' }} >
+          <MenuItem value={'codigo'}>Codigo</MenuItem>
           <MenuItem value={'nombre'}>Nombre</MenuItem>
-          <MenuItem value={'tipo'}>Tipo</MenuItem>
-          <MenuItem value={'precio'}>Precio</MenuItem>
+          <MenuItem value={'vencer'}>Por vencer</MenuItem>
         </Select>
         </FormControl>
         <FormControl sx={{ m: 1, minWidth: 400}}>
@@ -78,9 +79,9 @@ function SearchBar() {
           placeholder= {`Buscar por ${type}`}
           fullWidth
           sx={{
-            width: 300,  // Ajusta el ancho
-            height: 34,  // Ajusta la altura
-            fontSize: '0.9rem',  // Ajusta el tamaño de la fuente
+            width: 300,  
+            height: 34, 
+            fontSize: '0.9rem', 
             '& .MuiInputBase-input': {
               padding: '5px'  
               }

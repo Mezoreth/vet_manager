@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
@@ -29,6 +29,8 @@ import ClienteForm from './ClienteForm';
 import IconButton from '@mui/material/IconButton';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { useNavigate } from "react-router-dom";
+import CircularProgress from '@mui/material/CircularProgress';
+import axios from  'axios';
 
 const Item = styled(Paper)(({ theme }) => ({
   backgroundColor: '#fff',
@@ -42,12 +44,32 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 export default function Clientes() {
-  console.log('Cliente cargadoo')
   const [windowView, setWindowView ] = useState('');
+  const [clientes, setClientes]= useState([]);
+  const [selectedCliente, setSelectedCliente] = useState(null);
+  const [selectedId, setSelectedId] = useState(null);
+
   const handleClick = () =>{
     setWindowView('form')
   }
-  console.log('valor del state '+windowView)
+
+  const handleListItemClick = (cliente) => {
+    setSelectedCliente(cliente);
+    setSelectedId(cliente.id_cliente);
+    setWindowView('');
+  };
+
+  useEffect(()=>{
+    axios.get('http://127.0.0.1:3000/api/clientes')
+      .then(response =>{
+        setClientes(response.data);
+        console.log(JSON.stringify(response.data))
+      })
+      .catch(error =>{
+        console.error('Hubo un error al obtener los datos', error);
+      });
+  },[])
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <Grid container spacing={2}>
@@ -58,14 +80,14 @@ export default function Clientes() {
           <BasicButtons handleNewClick= {handleClick} />
         </Grid>
         <Grid size={4}>
-          <ClientesList setWindowView= {setWindowView}/>
+          <ClientesList clientes={clientes} selectedId = {selectedId} handleListItemClick={handleListItemClick}/>
         </Grid>
         <Grid size={8}>
         {windowView === 'form' ? (
             <ClienteForm />
           ) : (
             <div>
-              <ClienteCard />
+              <ClienteCard  cliente = {selectedCliente} />
               <MascotaCard />
             </div>
           )}
@@ -75,51 +97,34 @@ export default function Clientes() {
   );
 }
 
-function ClientesList({windowView, setWindowView }) {
-  const [selectedIndex, setSelectedIndex] = useState(1);
-
-  const handleListItemClick = (event, index) => {
-    setSelectedIndex('index');
-    setWindowView('');
-  };
+function ClientesList({clientes, selectedId, handleListItemClick }) {
 
   return (
-    <Box sx={{ width: '100%', bgcolor: (theme) => theme.palette.background.default, color: (theme) => theme.palette.text.primary, border:0}} >
+    <Box sx={{ width: '100%', maxHeight: '80vh' , overflowY: 'auto' , bgcolor: (theme) => theme.palette.background.default, color: (theme) => theme.palette.text.primary, border:0}} >
         <Typography variant="h6" component="div" sx={{ marginBottom: 1, marginTop: 2, textAlign: 'center', color: 'primary.main'}}>
           LISTA DE CLIENTES
         </Typography>
       <List component="nav" aria-label="lista-de-clientes" >
-        <ListItemButton
-          selected={selectedIndex === 1}
-          onClick={(event) => handleListItemClick(event, 1)}
-        >
-          <ListItemText primary="JUAN PEREZ" sx={{ textAlign: 'center'}}/>
-        </ListItemButton>
-        <ListItemButton
-          selected={selectedIndex === 2}
-          onClick={(event) => handleListItemClick(event, 2)}
-        >
-          <ListItemText primary="JAVIER MARTINEZ" sx={{ textAlign: 'center',  border: '2px solid red'}} />
-        </ListItemButton>
-        <ListItemButton
-          selected={selectedIndex === 3}
-          onClick={(event) => handleListItemClick(event, 3)}
-        >
-          <ListItemText primary="CARLOS ROMERO" sx={{ textAlign: 'center'}} />
-        </ListItemButton>
-        <ListItemButton
-          selected={selectedIndex === 4}
-          onClick={(event) => handleListItemClick(event, 4)}
-        >
-          <ListItemText primary="ELENA VARGAS" sx={{ textAlign: 'center'}} />
-        </ListItemButton>
+        { clientes.length <= 0 ? (
+              <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <CircularProgress />
+            </Box>
+        ) 
+        : (
+          clientes.map((cliente, index) => (
+            <ListItemButton selected={cliente.id_cliente === selectedId} onClick={(event) => handleListItemClick(cliente)}>
+              <ListItemText primary= {cliente.nombre_cliente} sx={{ textAlign: 'center',  border: cliente.observaciones ? '2px solid red' : '0'}} />
+            </ListItemButton>
+          ))
+        )}
       </List>
       <Divider />
     </Box>
   );
 }
 
-function ClienteCard() {
+function ClienteCard({cliente}) {
+  if (!cliente) return <Typography>No hay cliente seleccionado</Typography>;
   return (
       <Card maxWidth sx={{paddingRight:3, paddingLeft: 3, border:0 }}>
         <CardContent>
@@ -130,27 +135,27 @@ function ClienteCard() {
           <Grid container spacing={2} sx={{textAlign: 'left'}}>
             <Grid size={6}>
                 <Typography variant="body1">
-                  <strong>NOMBRE:</strong> JUAN PEREZ PARDO
+                  <strong>NOMBRE:</strong> {cliente.nombre_cliente}
                 </Typography>
             </Grid>
             <Grid size={6}>
                 <Typography variant="body1">
-                  <strong>TELEFONOO:</strong> 4567890
+                  <strong>TELEFONOO:</strong> {cliente.telefono }
                 </Typography>
             </Grid>
             <Grid size={6}>
                 <Typography variant="body1">
-                  <strong>DIRECCION:</strong> 123 CALLE , CIUDAD
+                  <strong>DIRECCION:</strong> {cliente.direccion }
                 </Typography>
             </Grid>
             <Grid size={6}>
                 <Typography variant="body1">
-                  <strong>CUMPLEAÑOS:</strong> 01 DE ENERO, 1990
+                  <strong>CUMPLEAÑOS:</strong> {cliente.cumpleanos }
                 </Typography>
             </Grid>
-            <Grid size={6}>
+            <Grid size={12}>
                 <Typography variant="body1">
-                  <strong>OBSERVACIONES:</strong>
+                  <strong>OBSERVACIONES:</strong> {cliente.observaciones }
                 </Typography>
             </Grid>
           </Grid>

@@ -27,7 +27,6 @@ export default function DiagnosticoForm({ open, onClose }) {
     const [comerInfo, setComerInfo] = useState('')
     const [vomitos, setVomitos] = useState(false)
     const [vomitosFecha, setVomitosFecha] = useState('')
-    const [vomitosInfo, setVomitosInfo] = useState('')
     const [diarrea, setDiarrea] = useState(false)
     const [diarreaFecha, setDiarreFecha] = useState('')
     const [diarreaInfo, setDiarreaInfo] = useState('')
@@ -92,15 +91,6 @@ export default function DiagnosticoForm({ open, onClose }) {
                         label="Desde Cuando?"
                         onChange={e => setVomitosFecha(e.target.value.toUpperCase())}
                         value={vomitosFecha}
-                        fullWidth
-                        disabled= {!vomitos}
-                    />
-                    <TextField
-                        type="text"
-                        variant='outlined'
-                        label="Como es?"
-                        onChange={e => setVomitosInfo(e.target.value.toUpperCase())}
-                        value={vomitosInfo}
                         fullWidth
                         disabled= {!vomitos}
                     />

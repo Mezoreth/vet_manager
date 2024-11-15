@@ -43,7 +43,7 @@ app.get("*", (req, res) => {
 });
 
 // Sincronizar la base de datos
-sequelize.sync({ force: true })  // Cambia `force: true` solo para pruebas (elimina las tablas existentes)
+sequelize.sync({ force: false })  // Cambia `force: true` solo para pruebas (elimina las tablas existentes)
   .then(() => {
     console.log('Base de datos sincronizada');
   })
