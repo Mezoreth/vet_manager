@@ -16,8 +16,8 @@ Caracteristicas.init(
         allowNull: false,
     },
     descripcion: {
-      type: DataTypes.INTEGER,
-      allowNull: false,
+      type: DataTypes.STRING(100),
+        allowNull: false,
     },
   },
   {

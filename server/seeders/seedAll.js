@@ -7,10 +7,13 @@ const seedersDir = path.join(__dirname, 'seeders');
 // Lista con el orden específico de los archivos
 const seedersOrdenados = [
   'seedClientes.js',  // Primero ejecutar el seeder de clientes
-  'seedEspecies.js',  
-  'seedColores.js',
-  'seedRazas.js',
-  'seedMascotas.js',     
+  'seedCaracteristicas.js',
+  'seedMascotas.js', 
+  'seedMedicamentos.js', 
+  'seedMascotas_Medicamentos.js',
+  'seedServicios.js',
+  'seedMascotas_Servicios.js',
+  'seedClientes_Servicios.js',
 ];
 
 // Función que ejecuta los seeders en el orden especificado

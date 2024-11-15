@@ -5,7 +5,10 @@ const Mascotas = require('../models/Mascotas');
 // Función para obtener todos los clientes
 const getClientes = async () => {
   try {
-    const clientes = await Clientes.findAll({ raw: true });
+    const clientes = await Clientes.findAll({
+      raw: true,  // Devuelve los resultados como objetos planos
+      order: [['nombre_cliente', 'ASC']],  // Ordena por nombre_cliente en orden ascendente
+    });
     return clientes; // Devuelve los clientes obtenidos
   } catch (error) {
     console.error('Error al obtener clientes:', error);
