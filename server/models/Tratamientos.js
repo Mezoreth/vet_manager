@@ -65,10 +65,6 @@ Tratamientos.init(
     peso: {
       type: DataTypes.TEXT,
     },
-    id_consulta: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
-    },
     id_mascota: {
       type: DataTypes.INTEGER,
       allowNull: true,

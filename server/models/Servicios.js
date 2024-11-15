@@ -27,16 +27,12 @@ Servicios.init(
       type: DataTypes.BOOLEAN,
       defaultValue: false,
     },
+    limp_oidos: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: false,
+    },
     precio: {
       type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
-    },
-    telefono: {
-      type: DataTypes.STRING(15),
-      allowNull: false,
-    },
-    tipo: {
-      type: DataTypes.STRING(100),
       allowNull: false,
     },
     observaciones: {
