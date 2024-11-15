@@ -93,8 +93,11 @@ router.get('/telefono/:telefono', async (req, res) => {
 
 // Ruta para crear cliente
 router.post('/', async (req, res) => {
-    const { nombre_cliente, telefono, direccion, cumpleanos, observaciones } = req.body;
-
+  //console.log('Datos recibidos');
+  //console.log(JSON.stringify(req.body));
+  var { nombre_cliente, telefono, direccion, cumpleanos, observaciones='' } = req.body;
+  //cumpleanos = cumpleanos === "" ? null : cumpleanos;
+  //console.log('nombre'+ nombre_cliente+' telefono: '+telefono+'direccion' + direccion+ ' cumpleaños: '+ typeof cumpleanos+ ' obs'+observaciones)
     try {
         const nuevoCliente = await ClienteQueries.createCliente(nombre_cliente, telefono, direccion, cumpleanos, observaciones);
         res.status(201).json(nuevoCliente);

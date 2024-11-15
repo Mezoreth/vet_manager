@@ -16,7 +16,7 @@ Clientes.init(
       allowNull: false,
     },
     telefono: {
-      type: DataTypes.STRING(15),
+      type: DataTypes.INTEGER,
     },
     direccion: {
       type: DataTypes.TEXT,

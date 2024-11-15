@@ -3,33 +3,49 @@ import { TextField, Button, Container, Stack, Typography } from '@mui/material';
 import { Link } from "react-router-dom"
 import Box from '@mui/material/Box';
 import axios from 'axios';
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import Slide from '@mui/material/Slide';
 
-export default function ClienteForm(){
+export default function ClienteForm( {setViewForm} ){
     const [nombre, setNombre] = useState('')
     const [apellido, setApellido] = useState('')
-    const [telefono, setTelefono] = useState('')
+    const [telefono, setTelefono] = useState(null)
     const [direccion, setDireccion] = useState('')
-    const [cumple, setCumple] = useState('')
+    const [cumple, setCumple] = useState(null)
     const [observaciones, setObservaciones] = useState('')
+    const [open, setOpen] = useState(false);
+    const [alertMessage, setAlertMessage]= useState('')
+    const [alertColor, setAlertColor]= useState('')
  
     function handleSubmit(event) {
         event.preventDefault();
         
         const clienteData = {
             nombre_cliente: nombre + ' ' + apellido,
-            telefono: telefono,
+            telefono: telefono ? telefono : null,
             direccion: direccion,
-            cumpleanos: cumple,
+            cumpleanos: cumple? cumple: null,
             observaciones: observaciones,
           };
 
         axios.post('http://127.0.0.1:3000/api/clientes', clienteData)
         .then(response => {
-            console.log('Cliente registrado con éxito:', response.data);
+            setAlertMessage('Se registro al cliente con exito');
+            setAlertColor('success');
+            setOpen(true);
+            //setViewForm('');
         })
         .catch(error => {
             console.error('Hubo un error al registrar al cliente:', error);
+            setAlertMessage('Error no se logro registrar al cliente');
+            setAlertColor('error');
+            setOpen(true);
         });
+    }
+
+    function handleCancel(){
+        setViewForm('');
     }
 
     useEffect(() => {
@@ -80,6 +96,11 @@ export default function ClienteForm(){
                         onChange={e => setTelefono(e.target.value)}
                         value={telefono}
                         fullWidth
+                        slotProps={{
+                            htmlInput: {
+                              max: 999999999,
+                            }
+                          }}
                     />
                 </Stack>
                 <Stack spacing={2} direction="row" sx={{marginBottom: 4 }}>
@@ -115,8 +136,26 @@ export default function ClienteForm(){
                         fullWidth
                     />
                 </Stack>
-                <Button variant="outlined" color="success" type="submit">Registrar</Button>
+                <Stack spacing={2} direction="row" sx={{ marginTop: 2 }}>
+                    <Button variant="outlined" color="success" type="submit">Registrar</Button>
+                    <Button variant="outlined" color="error" onClick={handleCancel}>Cancelar</Button>
+                </Stack>
             </form> 
+            <Snackbar
+                anchorOrigin= {{ vertical: 'botton', horizontal: 'center' }}
+                TransitionComponent= {Slide}
+                open={open}
+                autoHideDuration={3000}
+                onClose={() => setOpen(false)} >
+                <Alert
+                    onClose={() => setOpen(false)}
+                    severity={alertColor}
+                    variant="filled"
+                    sx={{ width: '100%' }}
+                    >
+                    {alertMessage}
+                </Alert>
+            </Snackbar>
         </Box>
     )
 }

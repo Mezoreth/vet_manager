@@ -3,72 +3,78 @@ import { styled } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
 import Grid from '@mui/material/Grid2';
-
 import Card from '@mui/material/Card';
-import CardActions from '@mui/material/CardActions';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
-import { Divider, textFieldClasses } from '@mui/material';
-
+import { Divider } from '@mui/material';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
-import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
-
 import BasicButtons from '../CrudButtons';
 import SearchBar from '../SearchBar';
 import ClienteForm from './ClienteForm';
-
 import IconButton from '@mui/material/IconButton';
 import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { useNavigate } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from  'axios';
 
-const Item = styled(Paper)(({ theme }) => ({
-  backgroundColor: '#fff',
-  ...theme.typography.body2,
-  padding: theme.spacing(1),
-  textAlign: 'center',
-  color: theme.palette.text.secondary,
-  ...theme.applyStyles('dark', {
-    backgroundColor: '#1A2027',
-  }),
-}));
-
 export default function Clientes() {
-  const [windowView, setWindowView ] = useState('');
+  const [viewForm, setViewForm ] = useState('');
   const [clientes, setClientes]= useState([]);
   const [selectedCliente, setSelectedCliente] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
+  const [reset, setReset] = useState(0);
 
-  const handleClick = () =>{
-    setWindowView('form')
+  const handleNewClick = () =>{
+    setViewForm('form')
+  }
+
+  const handleEditClick = () =>{
+    setViewForm('form')
+  }
+
+  const handleDeleteClick = () =>{
+    if (selectedCliente) {
+    let id = selectedCliente.id_cliente;
+    axios.delete(`http://127.0.0.1:3000/api/clientes/${id}`)
+    .then(response => {
+        console.log('Cliente eliminado exitosamente', response.data);
+        setSelectedCliente(null);
+        setSelectedId(null);
+        setReset(reset+1);
+    })
+    .catch(error => {
+        console.error('Hubo un error al eliminar el cliente:', error);
+    });
+    }
+    else {
+      console.log('seleccionar')
+    }
   }
 
   const handleListItemClick = (cliente) => {
     setSelectedCliente(cliente);
     setSelectedId(cliente.id_cliente);
-    setWindowView('');
+    setViewForm('');
   };
 
   useEffect(()=>{
     axios.get('http://127.0.0.1:3000/api/clientes')
       .then(response =>{
         setClientes(response.data);
-        console.log(JSON.stringify(response.data))
+        //console.log(JSON.stringify(response.data))
       })
       .catch(error =>{
         console.error('Hubo un error al obtener los datos', error);
       });
-  },[])
+  },[reset])
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -77,14 +83,14 @@ export default function Clientes() {
           <SearchBar />
         </Grid>
         <Grid size={8}>
-          <BasicButtons handleNewClick= {handleClick} />
+          <BasicButtons handleNewClick= {handleNewClick} handleEditClick= {handleEditClick} handleDeleteClick= {handleDeleteClick}/>
         </Grid>
         <Grid size={4}>
           <ClientesList clientes={clientes} selectedId = {selectedId} handleListItemClick={handleListItemClick}/>
         </Grid>
         <Grid size={8}>
-        {windowView === 'form' ? (
-            <ClienteForm />
+        {viewForm === 'form' ? (
+            <ClienteForm setViewForm={setViewForm} cliente={selectedCliente}/>
           ) : (
             <div>
               <ClienteCard  cliente = {selectedCliente} />
@@ -167,7 +173,7 @@ function ClienteCard({cliente}) {
 function MascotaCard() {
   const navigatePet = useNavigate();
 
-  const handleClickPet=() => {
+  const handleNewClickPet=() => {
     navigatePet("/mascotas");
   }
   return (
@@ -200,7 +206,7 @@ function MascotaCard() {
                     <TableCell align="center">{row.raza}</TableCell>
                     <TableCell align="center">{row.color}</TableCell>
                     <TableCell align="right">
-                      <IconButton id={row.id} aria-label="go to pet" size="small" color='success' onClick={handleClickPet} >
+                      <IconButton id={row.id} aria-label="go to pet" size="small" color='success' onClick={handleNewClickPet} >
                         <VisibilityOutlinedIcon fontSize="inherit" />
                       </IconButton>
                     </TableCell>
