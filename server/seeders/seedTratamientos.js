@@ -16,7 +16,7 @@ const crearTratamientosPrueba = async () => {
     }
 
     // Crear 50 tratamientos de prueba con datos reales utilizando Faker
-    for (let i = 0; i < 50; i++) {
+    for (let i = 0; i < 100; i++) {
       const mascota = faker.helpers.arrayElement(mascotas); // Selecciona una mascota aleatoria
 
       // Generar datos reales para el tratamiento
@@ -27,7 +27,7 @@ const crearTratamientosPrueba = async () => {
       // Solo generar fechas si vomitos o diarrea tienen valores
       const fechaVomitos = vomitos ? faker.date.past(1) : null; // Fecha de vómitos, si existe el valor
       const fechaDiarrea = diarrea ? faker.date.past(1) : null; // Fecha de diarrea, si existe el valor
-
+      const fechaTratamiento = faker.date.past(1);
       const otrosSintomas = faker.lorem.sentence().toUpperCase(); // Otros síntomas
       const diagnostico = faker.lorem.sentence().toUpperCase(); // Diagnóstico
       const dDiferencial = faker.lorem.sentence().toUpperCase(); // Diagnóstico diferencial
@@ -44,6 +44,7 @@ const crearTratamientosPrueba = async () => {
 
       // Crear el tratamiento con los datos generados
       await Tratamientos.create({
+        fecha_tratamiento: fechaTratamiento,
         comer,
         vomitos,
         diarrea,

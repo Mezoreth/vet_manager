@@ -23,10 +23,10 @@ Mascotas_Medicamentos.init(
         type: DataTypes.STRING(20),
         allowNull: false,
     },
-    catidad: {
+    /*catidad: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    },
+    },*/
     fecha_dosis: {
         type: DataTypes.DATEONLY,
     },

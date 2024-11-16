@@ -11,21 +11,34 @@ Productos.init(
       allowNull: false,
       autoIncrement: true,
     },
+    codigo: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
     nombre_producto: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    tipo: {
       type: DataTypes.STRING(100),
       allowNull: false,
     },
     descripcion: {
       type: DataTypes.TEXT,
     },
-    precio: {
+    fecha_vencimiento: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
+    precio_compra: {
       type: DataTypes.DECIMAL(10, 2),
       allowNull: false,
     },
-    fecha_vencimiento: {
-      type: DataTypes.DATEONLY,
+    precio_venta: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
     },
-    stock: {
+    cantidad: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

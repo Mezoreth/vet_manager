@@ -18,7 +18,11 @@ Mascotas_Servicios.init(
     id_servicio: {
         type: DataTypes.INTEGER,
         allowNull: true,
-      },
+    },
+    estado: {
+        type: DataTypes.STRING(20),
+        allowNull: false,
+    },
   },
   {
     sequelize,

@@ -4,6 +4,8 @@ const seedMascotas = require('./seedMascotas');
 const seedMascotas_Caracteristicas = require('./seedMascotas_Caracteristicas');
 const seedServicios = require('./seedServicios');
 const seedTratamientos = require('./seedTratamientos');
+const seedMedicamentos = require('./seedMedicamentos');
+const seedMascotas_Medicamentos = require('./seedMascotas_Medicamentos');
 
 // node seeders/seedAll.js
 const runSeeds = async () => {
@@ -28,6 +30,12 @@ const runSeeds = async () => {
 
     await seedTratamientos();  
     console.log("Tratamientos insertados correctamente.");
+
+    await seedMedicamentos();  
+    console.log("Medicamentos insertados correctamente.");
+
+    await seedMascotas_Medicamentos();  
+    console.log("Mascotas_Medicamentos insertados correctamente.");
 
     console.log("Todos los datos de prueba se han insertado correctamente.");
   } catch (error) {

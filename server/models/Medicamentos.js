@@ -11,6 +11,10 @@ Medicamentos.init(
       allowNull: false,
       autoIncrement: true,
     },
+    codigo: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
     nombre_medicamento: {
       type: DataTypes.STRING(100),
       allowNull: false,
@@ -19,22 +23,29 @@ Medicamentos.init(
       type: DataTypes.STRING(100),
       allowNull: false,
     },
-    tipo_unidad: {
-      type: DataTypes.STRING(100),
-      allowNull: false,
-    },
     composicion: {
       type: DataTypes.TEXT,
     },
-    precio: {
-      type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
+    presentacion: {
+      type: DataTypes.STRING(100),
     },
     fecha_vencimiento: {
       type: DataTypes.DATEONLY,
       allowNull: false,
     },
-    stock: {
+    precio_compra: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+    },
+    precio_venta: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+    },
+    tipo_unidad: {
+      type: DataTypes.STRING(100),
+      allowNull: false,
+    },
+    cantidad: {
       type: DataTypes.INTEGER,
       allowNull: false,
     },

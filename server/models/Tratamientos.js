@@ -11,6 +11,9 @@ Tratamientos.init(
       allowNull: false,
       autoIncrement: true,
     },
+    fecha_tratamiento: {
+      type: DataTypes.DATEONLY,
+    },
     comer: {
       type: DataTypes.TEXT,
     },
@@ -29,7 +32,7 @@ Tratamientos.init(
     otros_sintomas: {
       type: DataTypes.TEXT,
     },
-    daignostico: {
+    diagnostico: {
       type: DataTypes.TEXT,
     },
     d_diferencial: {
