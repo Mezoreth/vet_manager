@@ -22,7 +22,7 @@ Clientes.hasMany(Ventas, { foreignKey: 'id_cliente' });
 
 Clientes.belongsToMany(Servicios, {
   through: Clientes_Servicios,
-  as: 'servicios1',
+  as: 'servicios',
   foreignKey: 'id_cliente',
   onDelete: 'SET NULL',
 });
@@ -59,12 +59,12 @@ Mascotas.belongsToMany(Caracteristicas, {
 //Caracteristicas
 Caracteristicas.belongsToMany(Mascotas, {
   through: Mascotas_Caracteristicas,
-  as: 'mascotas2',
+  as: 'mascotas',
   foreignKey: 'id_caracteristica',
   onDelete: 'SET NULL',
 });
 
-//MEDICAMENTOS 
+//MEDICAMENTOS   
 Medicamentos.belongsToMany(Mascotas, {
   through: Mascotas_Medicamentos,
   as: 'mascotas',
@@ -72,7 +72,18 @@ Medicamentos.belongsToMany(Mascotas, {
   onDelete: 'SET NULL',
 })
 
-//DOSIS
+//MASCOTAS MEDICAMENTOS
+
+Mascotas_Medicamentos.belongsTo(Mascotas, {
+  foreignKey: 'id_mascota',
+  onDelete: 'SET NULL',
+});
+
+Mascotas_Medicamentos.belongsTo(Medicamentos, {
+  foreignKey: 'id_medicamento',
+  onDelete: 'SET NULL',
+});
+
 Mascotas_Medicamentos.hasMany(Refuerzos, { foreignKey: 'id_mascotaMedicamento' });
 
 //REFUERZOS
@@ -83,7 +94,7 @@ Refuerzos.belongsTo(Mascotas_Medicamentos, {
 // SERVICIOS
 Servicios.belongsToMany(Mascotas, {
   through: Mascotas_Servicios,
-  as: 'mascotas1',
+  as: 'mascotas',
   foreignKey: 'id_servicio',
   onDelete: 'SET NULL',
 });
@@ -108,5 +119,14 @@ Ventas.belongsTo(Clientes, {
   onDelete: 'SET NULL',
 });
 
+//MASCOTAS CARACTERISTICAS 
+Mascotas_Caracteristicas.belongsTo(Mascotas, {
+  foreignKey: 'id_mascota',
+  onDelete: 'SET NULL',
+});
 
+Mascotas_Caracteristicas.belongsTo(Caracteristicas, {
+  foreignKey: 'id_caracteristica',
+  onDelete: 'SET NULL',
+});
 

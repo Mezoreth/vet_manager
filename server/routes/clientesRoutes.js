@@ -14,32 +14,6 @@ router.get('/', async (req, res) => {
     }
 });
 
-// Ruta para obtener un cliente con todas sus mascotas
-router.get('/:id_cliente', async (req, res) => {
-    const { id_cliente } = req.params;
-    try {
-      const cliente = await ClienteQueries.obtenerClienteConMascotas(id_cliente);
-      if (!cliente) {
-        return res.status(404).json({ message: 'Cliente no encontrado' });
-      }
-      res.status(200).json(cliente);
-    } catch (error) {
-      console.error('Error al obtener cliente con mascotas:', error);
-      res.status(500).json({ message: 'Error al obtener cliente con mascotas', error });
-    }
-  });
-
-// Ruta para obtener clientes con mascotas
-router.get('/con-mascotas', async (req, res) => {
-    try {
-      const clientes = await ClienteQueries.getClientesConMascotas();
-      res.status(200).json(clientes); // Envía los datos de los clientes con mascotas en la respuesta
-    } catch (error) {
-      console.error('Error al obtener los clientes con mascotas:', error);
-      res.status(500).json({ error: 'Ocurrió un error al obtener los clientes con mascotas' });
-    }
-  });
-
 // Ruta para buscar clientes por nombre
 router.get('/nombre_cliente/:nombre_cliente', async (req, res) => {
     const { nombre_cliente } = req.params;  // Obtenemos el parámetro 'nombre_cliente' de la URL
