@@ -10,6 +10,7 @@ const Mascotas = require('./models/Mascotas');
 const Medicamentos = require('./models/Medicamentos');
 const Servicios = require('./models/Servicios');
 const Tratamientos = require('./models/Tratamientos');
+const Medicamentos_Tratamientos = require('./models/Medicamentos_Tratamientos');
 const Ventas = require('./models/Ventas');
 const Detalle_Ventas = require('./models/Detalle_Ventas');
 const Productos = require('./models/Productos');
