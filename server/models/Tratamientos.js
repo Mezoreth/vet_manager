@@ -17,10 +17,10 @@ Tratamientos.init(
     comer: {
       type: DataTypes.TEXT,
     },
-    vomitos: {
+    /*vomitos: {
       type: DataTypes.TEXT,
-    },
-    diarrea: {
+    },*/
+    diarrea: {      
       type: DataTypes.TEXT,
     },
     fecha_vomitos: {
@@ -71,6 +71,13 @@ Tratamientos.init(
     id_mascota: {
       type: DataTypes.INTEGER,
       allowNull: true,
+    },
+    dosis: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    via: {
+      type: DataTypes.TEXT,
     },
   },
   {

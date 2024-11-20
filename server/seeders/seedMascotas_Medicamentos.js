@@ -6,7 +6,7 @@ const Mascotas_Medicamentos = require('../models/Mascotas_Medicamentos');  // Mo
 // Tipos permitidos para los medicamentos
 const tiposMedicamentos = ['VACUNA', 'DESPARASITANTE', 'SUPRESOR'];
 
-// Crear medicamentos de prueba
+// Crear relaciones entre mascotas y medicamentos de prueba
 const crearMascotasMedicamentos = async () => {
   try {
     // Obtener todas las mascotas y medicamentos disponibles en la base de datos
@@ -34,13 +34,17 @@ const crearMascotasMedicamentos = async () => {
       // Generar fecha de dosis (por ejemplo, hoy o en el futuro cercano)
       const fechaDosis = faker.date.future(0.1); // 0.1 años, es decir, unos pocos días
 
+      // Generar fecha de refuerzo (puede ser entre 1 y 6 meses después de la fecha de dosis)
+      const fechaRefuerzo = faker.date.soon(180, { refDate: fechaDosis }); // 180 días (6 meses)
+
       // Crear la relación en la tabla Mascotas_Medicamentos
       await Mascotas_Medicamentos.create({
-        id_mascota: mascota.id_mascota,
-        id_medicamento: medicamento.id_medicamento,
-        tipo: tipo,
-        cantidad: cantidad,
-        fecha_dosis: fechaDosis.toISOString().split('T')[0],  // Solo la parte de la fecha
+        id_mascota: mascota.id_mascota,          // ID de la mascota
+        id_medicamento: medicamento.id_medicamento, // ID del medicamento
+        tipo: tipo,                              // Tipo de medicamento (VACUNA, DESPARASITANTE, SUPRESOR)
+        cantidad: cantidad,                      // Cantidad de dosis
+        fecha_dosis: fechaDosis.toISOString().split('T')[0], // Solo la parte de la fecha
+        fecha_refuerzo: fechaRefuerzo.toISOString().split('T')[0], // Fecha de refuerzo
       });
 
       console.log(`Medicamento asignado a la mascota: ${mascota.nombre_mascota} - Medicamento: ${medicamento.nombre_medicamento}`);

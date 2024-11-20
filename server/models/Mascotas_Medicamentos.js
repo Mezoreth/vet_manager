@@ -23,13 +23,16 @@ Mascotas_Medicamentos.init(
         type: DataTypes.STRING(20),
         allowNull: false,
     },
-    /*catidad: {
+    cantidad: {
       type: DataTypes.INTEGER,
       allowNull: false,
-    },*/
+    },
     fecha_dosis: {
         type: DataTypes.DATEONLY,
     },
+    fecha_refuerzo: {
+      type: DataTypes.DATEONLY,
+  },
   },
   {
     sequelize,

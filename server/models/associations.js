@@ -12,7 +12,7 @@ const Mascotas_Caracteristicas = require('./Mascotas_Caracteristicas');
 const Mascotas_Servicios = require('./Mascotas_Servicios');
 const Clientes_Servicios = require('./Clientes_Servicios');
 const Caracteristicas = require('./Caracteristicas');
-const Refuerzos = require('./Refuerzos');
+
 
 
 // CLIENTES
@@ -84,13 +84,6 @@ Mascotas_Medicamentos.belongsTo(Medicamentos, {
   onDelete: 'SET NULL',
 });
 
-Mascotas_Medicamentos.hasMany(Refuerzos, { foreignKey: 'id_mascotaMedicamento' });
-
-//REFUERZOS
-Refuerzos.belongsTo(Mascotas_Medicamentos, { 
-  foreignKey: 'id_mascotaMedicamento',
-  onDelete: 'SET NULL',
-});
 // SERVICIOS
 Servicios.belongsToMany(Mascotas, {
   through: Mascotas_Servicios,
