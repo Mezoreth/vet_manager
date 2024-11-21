@@ -2,12 +2,8 @@ const { Op } = require('sequelize');
 const Mascotas = require('../models/Mascotas');
 const Clientes = require('../models/Clientes');
 const Caracteristicas = require('../models/Caracteristicas');
-const Medicamentos = require('../models/Medicamentos');
-const Tratamientos = require('../models/Tratamientos');
-const Mascotas_Medicamentos = require('../models/Mascotas_Medicamentos');
 const Mascotas_Caracteristicas = require('../models/Mascotas_Caracteristicas');
 const sequelize = require('../database/database');
-
 
 
 // Consulta para obtener mascotas con caracteristicas y datos del cliente
@@ -555,13 +551,3 @@ module.exports = {
   obtenerMascotasPorNombre,
 
 };
-
-
-
-
-
-
-//createMascotaConCaracteristicas('MANCHAS', 'M', '2020/12/12', 1, '', true, false, null, false, 2, 1, 54);
-
-//updateMascotaConCaracteristicas(102,'BRUT', 'M', '2020/12/12', 1, '', true, false, null, false, 8, 7, 78);
-//deleteMascotaConCaracteristicas(102);

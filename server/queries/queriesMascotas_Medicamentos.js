@@ -7,6 +7,7 @@ const Mascotas_Medicamentos = require('../models/Mascotas_Medicamentos');
 const Mascotas_Caracteristicas = require('../models/Mascotas_Caracteristicas');
 const sequelize = require('../database/database');
 
+//Funcion para listar las vacunas de una mascota
 const obtenerMedicamentosPorMascotaVacuna = async (id_mascota) => {
   try {
     // Realizamos la consulta
@@ -56,6 +57,7 @@ const obtenerMedicamentosPorMascotaVacuna = async (id_mascota) => {
   }
 };
 
+//Funcion para listar los supresores de una mascota
 const obtenerMedicamentosPorMascotaSupresor = async (id_mascota) => {
   try {
     // Realizamos la consulta
@@ -106,7 +108,7 @@ const obtenerMedicamentosPorMascotaSupresor = async (id_mascota) => {
 };
 
 
-
+//Funcion para listar los desparasitantes de una mascota
 const obtenerMedicamentosPorMascotaDesparasitante = async (id_mascota) => {
   try {
     // Realizamos la consulta
