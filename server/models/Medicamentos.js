@@ -39,7 +39,7 @@ Medicamentos.init(
     },
     precio_venta: {
       type: DataTypes.DECIMAL(10, 2),
-      allowNull: false,
+      allowNull: true,
     },
     tipo_unidad: {
       type: DataTypes.STRING(100),

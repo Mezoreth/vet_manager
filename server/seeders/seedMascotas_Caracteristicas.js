@@ -40,6 +40,7 @@ const crearMascotasCaracteristicas = async () => {
     const mascotas = await Mascotas.findAll();
 
     const mascotasCaracteristicas = [];
+    const combinacionesCreadas = new Set();  // Conjunto para asegurar combinaciones únicas
 
     for (const mascota of mascotas) {
       // Asignar especie aleatoria
@@ -54,23 +55,44 @@ const crearMascotasCaracteristicas = async () => {
       // Asignar color aleatorio
       const color = faker.helpers.arrayElement(colores);
 
-      // Crear características para la mascota
-      mascotasCaracteristicas.push({
-        id_mascota: mascota.id_mascota,
-        id_caracteristica: (await Caracteristicas.findOne({ where: { descripcion: especie, tipo: 'ESPECIE' } })).id_caracteristica,
-      });
+      // Verificar que las combinaciones de características no se repitan
+      let idEspecie;
+      let idRaza;
+      let idColor;
 
-      if (raza) {
-        mascotasCaracteristicas.push({
-          id_mascota: mascota.id_mascota,
-          id_caracteristica: (await Caracteristicas.findOne({ where: { descripcion: raza, tipo: 'RAZA' } })).id_caracteristica,
-        });
+      // Asignar características de especie, raza y color
+      const especieCaracteristica = await Caracteristicas.findOne({ where: { descripcion: especie, tipo: 'ESPECIE' } });
+      if (especieCaracteristica) {
+        idEspecie = especieCaracteristica.id_caracteristica;
       }
 
-      mascotasCaracteristicas.push({
-        id_mascota: mascota.id_mascota,
-        id_caracteristica: (await Caracteristicas.findOne({ where: { descripcion: color, tipo: 'COLOR' } })).id_caracteristica,
-      });
+      if (raza) {
+        const razaCaracteristica = await Caracteristicas.findOne({ where: { descripcion: raza, tipo: 'RAZA' } });
+        if (razaCaracteristica) {
+          idRaza = razaCaracteristica.id_caracteristica;
+        }
+      }
+
+      const colorCaracteristica = await Caracteristicas.findOne({ where: { descripcion: color, tipo: 'COLOR' } });
+      if (colorCaracteristica) {
+        idColor = colorCaracteristica.id_caracteristica;
+      }
+
+      // Verificar y agregar las combinaciones únicas
+      if (idEspecie && !combinacionesCreadas.has(`${mascota.id_mascota}-${idEspecie}`)) {
+        mascotasCaracteristicas.push({ id_mascota: mascota.id_mascota, id_caracteristica: idEspecie });
+        combinacionesCreadas.add(`${mascota.id_mascota}-${idEspecie}`);
+      }
+
+      if (idRaza && !combinacionesCreadas.has(`${mascota.id_mascota}-${idRaza}`)) {
+        mascotasCaracteristicas.push({ id_mascota: mascota.id_mascota, id_caracteristica: idRaza });
+        combinacionesCreadas.add(`${mascota.id_mascota}-${idRaza}`);
+      }
+
+      if (idColor && !combinacionesCreadas.has(`${mascota.id_mascota}-${idColor}`)) {
+        mascotasCaracteristicas.push({ id_mascota: mascota.id_mascota, id_caracteristica: idColor });
+        combinacionesCreadas.add(`${mascota.id_mascota}-${idColor}`);
+      }
     }
 
     // Insertar todas las características en la tabla de relación

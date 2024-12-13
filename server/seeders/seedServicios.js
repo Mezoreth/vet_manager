@@ -15,7 +15,7 @@ const crearServiciosPrueba = async () => {
       return;
     }
 
-    // Crear 50 servicios de prueba con datos reales utilizando Faker
+    // Crear 100 servicios de prueba con datos reales utilizando Faker
     for (let i = 0; i < 100; i++) {
       const cliente = faker.helpers.arrayElement(clientes); // Selecciona un cliente aleatorio
 
@@ -31,6 +31,12 @@ const crearServiciosPrueba = async () => {
       // Corregimos el uso de faker.date.between() con el objeto { from, to }
       const fechaServicio = faker.date.between({ from: '2024-01-01', to: '2024-12-31' }); // Fecha del servicio
 
+      // Generar un estado aleatorio para el servicio
+      const estado = faker.helpers.arrayElement(['PENDIENTE', 'COMPLETADO', 'CANCELADO']);
+
+      // Generar un tipo de pago aleatorio
+      const tipo_pago = faker.helpers.arrayElement(['EFECTIVO', 'TARJETA', 'TRANSFERENCIA']); // Tipos de pago
+
       // Crear el servicio con los datos generados
       await Servicios.create({
         corte,
@@ -41,6 +47,8 @@ const crearServiciosPrueba = async () => {
         precio,
         observaciones,
         fecha_servicio: fechaServicio,
+        estado,  // Añadimos el estado
+        tipo_pago, // Añadimos el tipo de pago
       });
 
       console.log(`Servicio creado para el cliente: ${cliente.nombre_cliente}`);

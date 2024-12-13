@@ -95,7 +95,7 @@ Servicios.belongsToMany(Mascotas, {
 Servicios.belongsToMany(Clientes, {
   through: Clientes_Servicios,
   as: 'clientes',
-  foreignKey: 'id_servicios',
+  foreignKey: 'id_servicio',
   onDelete: 'SET NULL',
 });
 
@@ -111,6 +111,36 @@ Ventas.belongsTo(Clientes, {
   foreignKey: 'id_cliente',
   onDelete: 'SET NULL',
 });
+
+Ventas.hasMany(Detalle_Ventas, { foreignKey: 'id_venta', onDelete: 'SET NULL' });
+
+//DETALLE_VENTAS
+Detalle_Ventas.belongsTo(Ventas, { foreignKey: 'id_venta', onDelete: 'SET NULL' });
+
+Detalle_Ventas.belongsTo(Productos, {
+  foreignKey: 'id_item',
+  onDelete: 'SET NULL',
+  constraints: false,
+});
+
+Detalle_Ventas.belongsTo(Medicamentos, {
+  foreignKey: 'id_item',
+  onDelete: 'SET NULL',
+  constraints: false,
+});
+
+Detalle_Ventas.belongsTo(Servicios, {
+  foreignKey: 'id_item',
+  onDelete: 'SET NULL',
+  constraints: false,
+});
+
+Detalle_Ventas.belongsTo(Tratamientos, {
+  foreignKey: 'id_item',
+  onDelete: 'SET NULL',
+  constraints: false,
+});
+
 
 //MASCOTAS CARACTERISTICAS 
 Mascotas_Caracteristicas.belongsTo(Mascotas, {

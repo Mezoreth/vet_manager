@@ -24,8 +24,15 @@ Ventas.init(
     },
     id_cliente: {
       type: DataTypes.INTEGER,
-      allowNull: false,
+      allowNull: true,
+
     },
+    estado: {
+      type: DataTypes.TEXT,
+    },
+    tipo_pago: {
+      type: DataTypes.TEXT,
+    }
   },
   {
     sequelize,  // Usamos la conexión a la base de datos

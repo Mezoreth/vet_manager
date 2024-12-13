@@ -16,7 +16,7 @@ Detalle_Ventas.init(
       allowNull: false,
     },
     tipo_item: {
-      type: DataTypes.STRING(20),
+      type: DataTypes.STRING(50),
       allowNull: false,
     },
     id_item: {

@@ -54,4 +54,4 @@ const crearProductosPrueba = async () => {
 };
 
 // Ejecutamos la función
-crearProductosPrueba();
+module.exports = crearProductosPrueba;

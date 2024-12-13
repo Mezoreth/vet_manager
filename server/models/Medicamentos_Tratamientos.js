@@ -5,7 +5,7 @@ class Medicamentos_Tratamientos extends Model {}
 
 Medicamentos_Tratamientos.init(
   {
-    id_mascotaMedicamento: {
+    id_medicamentoTratamiento: {
         type: DataTypes.INTEGER,
         primaryKey: true,
         allowNull: false,
@@ -18,6 +18,21 @@ Medicamentos_Tratamientos.init(
     id_medicamento: {
         type: DataTypes.INTEGER,
         allowNull: true,
+    },
+    dosis: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    via: {
+      type: DataTypes.TEXT,
+      allowNull: true,
+    },
+    costo: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
+    },
+    fecha: {
+      type: DataTypes.DATEONLY,
     },
   },
   {

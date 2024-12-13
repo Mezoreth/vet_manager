@@ -17,9 +17,6 @@ Tratamientos.init(
     comer: {
       type: DataTypes.TEXT,
     },
-    /*vomitos: {
-      type: DataTypes.TEXT,
-    },*/
     diarrea: {      
       type: DataTypes.TEXT,
     },
@@ -72,11 +69,10 @@ Tratamientos.init(
       type: DataTypes.INTEGER,
       allowNull: true,
     },
-    dosis: {
-      type: DataTypes.INTEGER,
-      allowNull: true,
+    estado: {
+      type: DataTypes.TEXT,
     },
-    via: {
+    tipo_pago: {
       type: DataTypes.TEXT,
     },
   },

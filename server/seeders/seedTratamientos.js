@@ -24,7 +24,8 @@ const crearTratamientosPrueba = async () => {
 
       // Solo generar fechas si diarrea tiene valores
       const fechaDiarrea = diarrea ? faker.date.past(1) : null; // Fecha de diarrea, si existe el valor
-      const fechaTratamiento = faker.date.past(1);
+      const fechaVomitos = faker.date.past(1); // Fecha de vómitos
+      const fechaTratamiento = faker.date.past(1); // Fecha de tratamiento
       const otrosSintomas = faker.lorem.sentence().toUpperCase(); // Otros síntomas
       const diagnostico = faker.lorem.sentence().toUpperCase(); // Diagnóstico
       const dDiferencial = faker.lorem.sentence().toUpperCase(); // Diagnóstico diferencial
@@ -38,14 +39,19 @@ const crearTratamientosPrueba = async () => {
       const palAbd = faker.lorem.sentence().toUpperCase(); // Palpación abdominal
       const fRespiratoria = faker.lorem.sentence().toUpperCase(); // Frecuencia respiratoria
       const peso = `${faker.number.int({ min: 1, max: 10 })} KG`; // Peso
-      const dosis = faker.number.int({ min: 1, max: 5 }); // Dosis: un número aleatorio
-      const via = faker.lorem.word().toUpperCase(); // Vía de administración
+
+      // Generar un estado aleatorio para el tratamiento
+      const estado = faker.helpers.arrayElement(['PENDIENTE', 'COMPLETADO', 'CANCELADO']);
+      
+      // Generar un tipo de pago aleatorio
+      const tipoPago = faker.helpers.arrayElement(['EFECTIVO', 'TARJETA', 'TRANSFERENCIA', 'CHEQUE', 'MOBILE']);
 
       // Crear el tratamiento con los datos generados
       await Tratamientos.create({
         fecha_tratamiento: fechaTratamiento,
         comer,
         diarrea,
+        fecha_vomitos: fechaVomitos,
         fecha_diarrea: fechaDiarrea,
         otros_sintomas: otrosSintomas,
         diagnostico,
@@ -61,8 +67,8 @@ const crearTratamientosPrueba = async () => {
         f_respiratoria: fRespiratoria,
         peso,
         id_mascota: mascota.id_mascota, // Asociamos el tratamiento con una mascota
-        dosis,
-        via,
+        estado, // Añadimos el estado
+        tipo_pago: tipoPago, // Añadimos el tipo de pago
       });
 
       console.log(`Tratamiento creado para la mascota: ${mascota.nombre_mascota}`);

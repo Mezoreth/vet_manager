@@ -30,7 +30,7 @@ const crearMedicamentosPrueba = async () => {
 
       const precioCompra = faker.number.int({ min: 50, max: 200 }).toFixed(2); // Precio de compra
       const precioVenta = (parseFloat(precioCompra) * 1.5).toFixed(2); // Precio de venta (por ejemplo, un 50% más caro)
-      const tipoUnidad = faker.helpers.arrayElement(['CAJA', 'FRASCO', 'BOTELLA', 'LOTE']); // Tipo de unidad
+      const tipoUnidad = faker.helpers.arrayElement(['FARMACIA', 'CONSULTORIO']); // Tipo de unidad
       const cantidad = faker.number.int({ min: 10, max: 100 }); // Cantidad disponible
 
       // Crear el medicamento en la base de datos

@@ -20,6 +20,7 @@ const Mascotas_Caracteristicas = require('./models/Mascotas_Caracteristicas');
 const Mascotas_Servicios = require('./models/Mascotas_Servicios');
 const Clientes_Servicios = require('./models/Clientes_Servicios');
 const Caracteristicas = require('./models/Caracteristicas');
+const Consultas = require('./models/Consultas');
 require('./models/associations');
 const cors = require('cors');  
 var app = express();

@@ -42,6 +42,12 @@ Servicios.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
+    estado: {
+      type: DataTypes.TEXT,
+    },
+    tipo_pago: {
+      type: DataTypes.TEXT,
+    },
   },
   {
     sequelize,

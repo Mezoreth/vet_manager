@@ -27,12 +27,22 @@ Mascotas_Medicamentos.init(
       type: DataTypes.INTEGER,
       allowNull: false,
     },
+    precio: {
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+    },
     fecha_dosis: {
         type: DataTypes.DATEONLY,
     },
     fecha_refuerzo: {
       type: DataTypes.DATEONLY,
-  },
+    },
+    estado: {
+    type: DataTypes.TEXT,
+    },
+    tipo_pago: {
+      type: DataTypes.TEXT,
+    }
   },
   {
     sequelize,
