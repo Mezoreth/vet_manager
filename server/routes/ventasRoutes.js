@@ -2,6 +2,48 @@ const express = require('express');
 const VentaQueries = require('../queries/queriesVentas');  // Ajusta la ruta según tu estructura
 const router = express.Router();
 
+
+// Ruta para crear una venta
+router.post('/', async (req, res) => {
+  try {
+    const { fecha_venta, total_venta, observaciones, id_cliente, estado, tipo_pago } = req.body;
+    const nuevaVenta = await crearVenta(fecha_venta, total_venta, observaciones, id_cliente, estado, tipo_pago);
+    res.status(201).json(nuevaVenta);
+  } catch (error) {
+    console.error('Error al crear la venta:', error);
+    res.status(500).json({ error: 'Error al crear la venta' });
+  }
+});
+
+// Ruta para actualizar una venta
+router.put('/:id_venta', async (req, res) => {
+  try {
+    const { id_venta } = req.params; // Obtener el id_venta desde los parámetros de la URL
+    const { fecha_venta, total_venta, observaciones, id_cliente, estado, tipo_pago } = req.body; 
+    const ventaActualizada = await actualizarVenta(id_venta, fecha_venta, total_venta, observaciones, id_cliente, estado, tipo_pago);
+    res.json(ventaActualizada);
+  } catch (error) {
+    console.error('Error al actualizar la venta:', error);
+    res.status(500).json({ error: 'Error al actualizar la venta' });
+  }
+});
+
+// Ruta para eliminar una venta
+router.delete('/:id_venta', async (req, res) => {
+  try {
+    const { id_venta } = req.params;  
+    const result = await eliminarVenta(id_venta);  
+    if (result.message === 'Venta eliminada con éxito') {
+      return res.status(200).json(result);  // Si la venta fue eliminada, devolver mensaje de éxito
+    } else {
+      return res.status(404).json(result);  // Si no se encontró la venta, devolver mensaje de error
+    }
+  } catch (error) {
+    console.error('Error al eliminar la venta:', error);
+    return res.status(500).json({ message: 'Error al eliminar la venta', error: error.message });
+  }
+});
+
 // Ruta para obtener todas las ventas
 router.get('/', async (req, res) => {
     try {

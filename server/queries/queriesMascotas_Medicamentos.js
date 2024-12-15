@@ -8,7 +8,7 @@ const Mascotas_Caracteristicas = require('../models/Mascotas_Caracteristicas');
 const sequelize = require('../database/database');
 
 //Funcion para listar las vacunas de una mascota
-const obtenerMedicamentosPorMascotaVacuna = async (id_mascota) => {
+const obtenerVacunas = async (id_mascota) => {
   try {
     // Realizamos la consulta
     const medicamentosMascota = await Mascotas_Medicamentos.findAll({
@@ -57,7 +57,7 @@ const obtenerMedicamentosPorMascotaVacuna = async (id_mascota) => {
 };
 
 //Funcion para listar los supresores de una mascota
-const obtenerMedicamentosPorMascotaSupresor = async (id_mascota) => {
+const obtenerSupresores = async (id_mascota) => {
   try {
     // Realizamos la consulta
     const medicamentosMascota = await Mascotas_Medicamentos.findAll({
@@ -107,7 +107,7 @@ const obtenerMedicamentosPorMascotaSupresor = async (id_mascota) => {
 
 
 //Funcion para listar los desparasitantes de una mascota
-const obtenerMedicamentosPorMascotaDesparasitante = async (id_mascota) => {
+const obtenerDesparasitantes = async (id_mascota) => {
   try {
     // Realizamos la consulta
     const medicamentosMascota = await Mascotas_Medicamentos.findAll({
@@ -453,9 +453,9 @@ const obtenerDesparasitantesPendientes = async (id_mascota) => {
 };
 
 module.exports = {
-  obtenerMedicamentosPorMascotaVacuna,
-  obtenerMedicamentosPorMascotaSupresor,
-  obtenerMedicamentosPorMascotaDesparasitante,
+  obtenerVacunas,
+  obtenerSupresores,
+  obtenerDesparasitantes,
   createMascotaMedicamento,
   updateMascotaMedicamento,
   deleteMascotaMedicamento,

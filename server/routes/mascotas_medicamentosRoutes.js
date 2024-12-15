@@ -7,7 +7,7 @@ router.get('/vacuna/:id_mascota', async (req, res) => {
     const { id_mascota } = req.params;  
     
     try {
-      const medicamentos = await MascotasMedicamentosQueries.obtenerMedicamentosPorMascotaVacuna(id_mascota);
+      const medicamentos = await MascotasMedicamentosQueries.obtenerVacunas(id_mascota);
       if (medicamentos.message) {
         return res.status(404).json({ message: medicamentos.message });
       }
@@ -44,7 +44,7 @@ router.get('/:id_mascotaMedicamento', async (req, res) => {
 router.get('/supresor/:id_mascota', async (req, res) => {
   const { id_mascota } = req.params;  
   try {
-    const medicamentos = await MascotasMedicamentosQueries.obtenerMedicamentosPorMascotaSupresor(id_mascota);
+    const medicamentos = await MascotasMedicamentosQueries.obtenerSupresores(id_mascota);
     if (medicamentos.message) {
       return res.status(404).json({ message: medicamentos.message });
     }
@@ -60,7 +60,7 @@ router.get('/desparasitante/:id_mascota', async (req, res) => {
   const { id_mascota } = req.params; 
   
   try {
-    const medicamentos = await MascotasMedicamentosQueries.obtenerMedicamentosPorMascotaDesparasitante(id_mascota);
+    const medicamentos = await MascotasMedicamentosQueries.obtenerDesparasitantes(id_mascota);
     if (medicamentos.message) {
       return res.status(404).json({ message: medicamentos.message });
     }
