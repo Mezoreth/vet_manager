@@ -179,4 +179,64 @@ router.get('/desparasitante/pendiente/:id_mascota', async (req, res) => {
   }
 });
 
+
+
+//lISTAR VACUNAS PROXIMAS A fecha_dosis
+router.get('/vacuna/dosis/vencimiento', async (req, res) => {
+  try {
+    // Llamamos a la función para obtener las vacunas con dosis dentro de los próximos 15 días
+    const vacunasProximas = await MascotasMedicamentosQueries.obtenerVacunasPorDosis();
+    
+    // Si no se encuentran resultados, devolvemos un mensaje
+    if (vacunasProximas.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron vacunas con dosis dentro de los próximos 15 días.' });
+    }
+
+    // Devolvemos las vacunas encontradas
+    res.json(vacunasProximas);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Hubo un error al obtener las vacunas con dosis próximas.' });
+  }
+});
+
+
+
+//LISTAR DESPARASITANTES PROXIMOS A fecha_dosis
+router.get('/desparasitante/dosis/vencimiento', async (req, res) => {
+  try {
+    // Llamamos a la función para obtener las vacunas con dosis dentro de los próximos 15 días
+    const vacunasProximas = await MascotasMedicamentosQueries.obtenerDesparasitantesPorDosis();
+    
+    // Si no se encuentran resultados, devolvemos un mensaje
+    if (vacunasProximas.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron desparasitantes con dosis dentro de los próximos 15 días.' });
+    }
+
+    // Devolvemos las vacunas encontradas
+    res.json(vacunasProximas);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Hubo un error al obtener los desparasitantes con dosis próximas.' });
+  }
+});
+
+//LISTAR DESPARASITANTES PROXIMOS A fecha_dosis
+router.get('/supresor/dosis/vencimiento', async (req, res) => {
+  try {
+    // Llamamos a la función para obtener las vacunas con dosis dentro de los próximos 15 días
+    const vacunasProximas = await MascotasMedicamentosQueries.obtenerSupresoresPorDosis();
+    
+    // Si no se encuentran resultados, devolvemos un mensaje
+    if (vacunasProximas.length === 0) {
+      return res.status(404).json({ message: 'No se encontraron desparasitantes con dosis dentro de los próximos 15 días.' });
+    }
+
+    // Devolvemos las vacunas encontradas
+    res.json(vacunasProximas);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: 'Hubo un error al obtener los desparasitantes con dosis próximas.' });
+  }
+});
 module.exports = router;

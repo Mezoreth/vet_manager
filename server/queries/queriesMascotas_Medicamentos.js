@@ -4,7 +4,6 @@ const Clientes = require('../models/Clientes');
 const Caracteristicas = require('../models/Caracteristicas');
 const Medicamentos = require('../models/Medicamentos');
 const Mascotas_Medicamentos = require('../models/Mascotas_Medicamentos');
-const Mascotas_Caracteristicas = require('../models/Mascotas_Caracteristicas');
 const sequelize = require('../database/database');
 
 //Funcion para listar las vacunas de una mascota
@@ -452,6 +451,229 @@ const obtenerDesparasitantesPendientes = async (id_mascota) => {
   }
 };
 
+
+//listar vacunas con fecha_dosis de 15 dias o menos 
+const obtenerVacunasPorDosis = async () => {
+  try {
+    const fechaActual = new Date();
+    const fechaLimite = new Date();
+    fechaLimite.setDate(fechaActual.getDate() + 15);
+    const medicamentosMascota = await Mascotas_Medicamentos.findAll({
+      where: {
+        tipo: 'VACUNA',  
+        fecha_dosis: {
+          [Op.between]: [fechaActual, fechaLimite]  
+        }
+      },
+      include: [
+        {
+          model: Medicamentos,       
+          as: 'Medicamento',         
+          required: true,              
+          attributes: ['nombre_medicamento'],
+        },
+        {
+          model: Mascotas,  
+          as: 'Mascota',  
+          required: true,   
+          attributes: ['id_mascota', 'nombre_mascota'], 
+          include: [
+            {
+              model: Clientes,  
+              as: 'Cliente',   
+              required: true,  
+              attributes: ['id_cliente', 'nombre_cliente', 'telefono'], 
+            }
+          ]
+        }
+      ],
+      attributes: [
+        'id_mascotaMedicamento',
+        'id_mascota',
+        'id_medicamento',
+        'fecha_dosis',
+        'fecha_refuerzo',
+        'cantidad',
+        'precio',
+        'estado',
+        'tipo_pago',
+      ],
+    });
+    const resultadoAplanado = medicamentosMascota.map((medicamento) => {
+      const medicamentoData = medicamento.Medicamento || {};
+      const mascotaData = medicamento.Mascota || {};
+      const clienteData = mascotaData.Cliente || {};  
+
+      return {
+        id_mascotaMedicamento: medicamento.id_mascotaMedicamento,
+        id_mascota: mascotaData.id_mascota,
+        nombre_mascota: mascotaData.nombre_mascota,
+        id_cliente: clienteData.id_cliente,
+        nombre_cliente: clienteData.nombre_cliente,
+        telefono: clienteData.telefono,  
+        nombre_medicamento: medicamentoData.nombre_medicamento,
+        fecha_dosis: medicamento.fecha_dosis,
+        fecha_refuerzo: medicamento.fecha_refuerzo,
+        tipo_pago: medicamento.tipo_pago,
+      };
+    });
+    const resultadoOrdenado = resultadoAplanado.sort((a, b) => new Date(a.fecha_dosis) - new Date(b.fecha_dosis));
+
+    return resultadoOrdenado;
+  } catch (error) {
+    console.error('Error al obtener vacunas con dosis próxima:', error);
+    throw error;
+  }
+};
+
+//listar desparasitantes con fecha proxima a 15 dias o menos
+const obtenerDesparasitantesPorDosis = async () => {
+  try {
+    const fechaActual = new Date();
+    const fechaLimite = new Date();
+    fechaLimite.setDate(fechaActual.getDate() + 15);
+    const medicamentosMascota = await Mascotas_Medicamentos.findAll({
+      where: {
+        tipo: 'DESPARASITANTE',  
+        fecha_dosis: {
+          [Op.between]: [fechaActual, fechaLimite]  
+        }
+      },
+      include: [
+        {
+          model: Medicamentos,       
+          as: 'Medicamento',         
+          required: true,              
+          attributes: ['nombre_medicamento'],
+        },
+        {
+          model: Mascotas,  
+          as: 'Mascota',  
+          required: true,   
+          attributes: ['id_mascota', 'nombre_mascota'], 
+          include: [
+            {
+              model: Clientes,  
+              as: 'Cliente',   
+              required: true,  
+              attributes: ['id_cliente', 'nombre_cliente', 'telefono'], 
+            }
+          ]
+        }
+      ],
+      attributes: [
+        'id_mascotaMedicamento',
+        'id_mascota',
+        'id_medicamento',
+        'fecha_dosis',
+        'fecha_refuerzo',
+        'cantidad',
+        'precio',
+        'estado',
+        'tipo_pago',
+      ],
+    });
+
+    const resultadoAplanado = medicamentosMascota.map((medicamento) => {
+    const medicamentoData = medicamento.Medicamento || {};
+    const mascotaData = medicamento.Mascota || {};
+    const clienteData = mascotaData.Cliente || {};  // Accedemos a los datos del cliente
+
+    return {
+        id_mascotaMedicamento: medicamento.id_mascotaMedicamento,
+        id_mascota: mascotaData.id_mascota,
+        nombre_mascota: mascotaData.nombre_mascota,
+        id_cliente: clienteData.id_cliente,
+        nombre_cliente: clienteData.nombre_cliente,
+        telefono: clienteData.telefono,  // Incluimos el teléfono del cliente
+        nombre_medicamento: medicamentoData.nombre_medicamento,
+        fecha_dosis: medicamento.fecha_dosis,
+        fecha_refuerzo: medicamento.fecha_refuerzo,
+        tipo_pago: medicamento.tipo_pago,
+      };
+    });
+
+    const resultadoOrdenado = resultadoAplanado.sort((a, b) => new Date(a.fecha_dosis) - new Date(b.fecha_dosis));
+
+    return resultadoOrdenado;
+  } catch (error) {
+    console.error('Error al obtener desparasitantes con dosis próxima:', error);
+    throw error;
+  }
+};
+
+//Listar supresores con fecha menor o igual a 5meses
+const obtenerSupresoresPorDosis = async () => {
+  try {
+    const fechaActual = new Date();
+    const fechaLimite = new Date();
+    fechaLimite.setMonth(fechaActual.getMonth() + 5);  
+    const medicamentosMascota = await Mascotas_Medicamentos.findAll({
+      where: {
+        tipo: 'SUPRESOR', 
+        fecha_dosis: {
+          [Op.between]: [fechaActual, fechaLimite]  
+        }
+      },
+      include: [
+        {
+          model: Medicamentos,       
+          as: 'Medicamento',         
+          required: true,              
+          attributes: ['nombre_medicamento'],
+        },
+        {
+          model: Mascotas,  
+          as: 'Mascota',  
+          required: true,   
+          attributes: ['id_mascota', 'nombre_mascota'], 
+          include: [
+            {
+              model: Clientes,  
+              as: 'Cliente',   
+              required: true,  
+              attributes: ['id_cliente', 'nombre_cliente', 'telefono'], 
+            }
+          ]
+        }
+      ],
+      attributes: [
+        'id_mascotaMedicamento',
+        'id_mascota',
+        'id_medicamento',
+        'fecha_dosis',
+        'fecha_refuerzo',
+        'cantidad',
+        'precio',
+        'estado',
+        'tipo_pago',
+      ],
+    });
+    const resultadoAplanado = medicamentosMascota.map((medicamento) => {
+      const medicamentoData = medicamento.Medicamento || {};
+      const mascotaData = medicamento.Mascota || {};
+      const clienteData = mascotaData.Cliente || {};  
+      return {
+        id_mascotaMedicamento: medicamento.id_mascotaMedicamento,
+        id_mascota: mascotaData.id_mascota,
+        nombre_mascota: mascotaData.nombre_mascota,
+        id_cliente: clienteData.id_cliente,
+        nombre_cliente: clienteData.nombre_cliente,
+        telefono: clienteData.telefono,  
+        nombre_medicamento: medicamentoData.nombre_medicamento,
+        fecha_dosis: medicamento.fecha_dosis,
+        fecha_refuerzo: medicamento.fecha_refuerzo,
+        tipo_pago: medicamento.tipo_pago,
+      };
+    });
+    const resultadoOrdenado = resultadoAplanado.sort((a, b) => new Date(a.fecha_dosis) - new Date(b.fecha_dosis));
+    return resultadoOrdenado;
+  } catch (error) {
+    console.error('Error al obtener supresores con dosis próxima:', error);
+    throw error;
+  }
+};
+
 module.exports = {
   obtenerVacunas,
   obtenerSupresores,
@@ -463,6 +685,9 @@ module.exports = {
   obtenerSupresoresPendientes,
   obtenerDesparasitantesPendientes,
   obtenerMascotaMedicamentoPorId,
+  obtenerVacunasPorDosis,
+  obtenerDesparasitantesPorDosis,
+  obtenerSupresoresPorDosis,
 };
   
   

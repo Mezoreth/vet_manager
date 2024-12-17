@@ -156,4 +156,26 @@ router.delete('/:id_medicamento', async (req, res) => {
   }
 });
 
+// Ruta para obtener medicamentos de tipo FARMACIA con vencimiento en 3 meses o menos
+router.get('/farmacia/vencimiento', async (req, res) => {
+  try {
+    const medicamentosFarmacia = await MedicamentoQueries.getMedFarmaciaVencimiento();
+    res.json(medicamentosFarmacia);  
+  } catch (error) {
+    console.error('Error al obtener medicamentos FARMACIA con vencimiento en 3 meses o menos:', error);
+    res.status(500).json({ error: 'Error al obtener medicamentos FARMACIA con vencimiento en 3 meses o menos' });
+  }
+});
+
+
+// Ruta para obtener medicamentos de tipo CONSULTORIO con vencimiento en 3 meses o menos
+router.get('/consultorio/vencimiento', async (req, res) => {
+  try {
+    const medicamentosConsultorio = await MedicamentoQueries.getMedConsultorioVencimiento();
+    res.json(medicamentosConsultorio);  
+  } catch (error) {
+    console.error('Error al obtener medicamentos CONSULTORIO con vencimiento en 3 meses o menos:', error);
+    res.status(500).json({ error: 'Error al obtener medicamentos CONSULTORIO con vencimiento en 3 meses o menos' });
+  }
+});
 module.exports = router;

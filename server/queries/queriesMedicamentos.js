@@ -229,6 +229,67 @@ const getMedicamentosConsultorioPorCodigo = async (codigo) => {
 };
 
 
+
+
+
+// Obtener medicamentos de tipo FARMACIA cuya fecha de vencimiento es menor o igual a 3 meses
+const getMedFarmaciaVencimiento = async () => {
+  try {
+    // Obtenemos la fecha actual
+    const fechaActual = new Date();
+    
+    // Calculamos la fecha límite (3 meses hacia adelante)
+    const fechaLimite = new Date();
+    fechaLimite.setMonth(fechaActual.getMonth() + 3);
+
+    // Realizamos la consulta
+    const medicamentosFarmacia = await Medicamentos.findAll({
+      where: {
+        tipo_unidad: 'FARMACIA',  // Filtramos por tipo FARMACIA
+        fecha_vencimiento: {
+          [Op.lte]: fechaLimite,  // Filtramos por fecha de vencimiento menor o igual a 3 meses
+        }
+      },
+      order: [['fecha_vencimiento', 'ASC']]  // Ordenamos por fecha_vencimiento de la más antigua a la más reciente
+    });
+
+    return medicamentosFarmacia;
+  } catch (error) {
+    console.error('Error al obtener medicamentos FARMACIA con vencimiento en 3 meses o menos:', error);
+    throw error;
+  }
+};
+
+// Obtener medicamentos de tipo CONSULTORIO cuya fecha de vencimiento es menor o igual a 3 meses
+const getMedConsultorioVencimiento = async () => {
+  try {
+    // Obtenemos la fecha actual
+    const fechaActual = new Date();
+    
+    // Calculamos la fecha límite (3 meses hacia adelante)
+    const fechaLimite = new Date();
+    fechaLimite.setMonth(fechaActual.getMonth() + 3);
+
+    // Realizamos la consulta
+    const medicamentosConsultorio = await Medicamentos.findAll({
+      where: {
+        tipo_unidad: 'CONSULTORIO',  // Filtramos por tipo CONSULTORIO
+        fecha_vencimiento: {
+          [Op.lte]: fechaLimite,  // Filtramos por fecha de vencimiento menor o igual a 3 meses
+        }
+      },
+      order: [['fecha_vencimiento', 'ASC']]  // Ordenamos por fecha_vencimiento de la más antigua a la más reciente
+    });
+
+    return medicamentosConsultorio;
+  } catch (error) {
+    console.error('Error al obtener medicamentos CONSULTORIO con vencimiento en 3 meses o menos:', error);
+    throw error;
+  }
+};
+
+
+
 module.exports = {
     createMedicamento,
     updateMedicamento,
@@ -241,4 +302,6 @@ module.exports = {
     getMedicamentosConsultorioPorNombre,
     getMedicamentosFarmaciaPorCodigo,
     getMedicamentosConsultorioPorCodigo,
+    getMedFarmaciaVencimiento,
+    getMedConsultorioVencimiento,
 };
