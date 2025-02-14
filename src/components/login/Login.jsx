@@ -23,7 +23,12 @@ export default function Login({ setIsAuthenticated }) {
   const navigate = useNavigate();
 
   function handleSubmit() {
-    axios.get('http://127.0.0.1:3000/api/auth')
+    let usuarioData = {
+      usuario: usuario,
+      pass: password,
+    };
+
+    axios.post('http://127.0.0.1:3000/api/auth', usuarioData)
     .then(response =>{
       if (response.data === 'admin'){
         setIsAuthenticated(true);  
