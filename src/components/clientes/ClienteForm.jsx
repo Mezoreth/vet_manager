@@ -7,7 +7,7 @@ import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import Slide from '@mui/material/Slide';
 
-export default function ClienteForm( {setViewForm} ){
+export default function ClienteForm( {setViewForm , resetList, setResetList} ){
     const [nombre, setNombre] = useState('')
     const [apellido, setApellido] = useState('')
     const [telefono, setTelefono] = useState(null)
@@ -34,6 +34,7 @@ export default function ClienteForm( {setViewForm} ){
             setAlertMessage('Se registro al cliente con exito');
             setAlertColor('success');
             setOpen(true);
+            setResetList(resetList+1);
             //setViewForm('');
         })
         .catch(error => {

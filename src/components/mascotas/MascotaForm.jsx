@@ -9,7 +9,9 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-
+import IconButton from '@mui/material/IconButton';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import Autocomplete from '@mui/material/Autocomplete';
 
 const MascotaForm = () => {
     const [nombre, setNombre] = useState('')
@@ -34,6 +36,12 @@ const MascotaForm = () => {
     const handleCancel = () => {
         navigate(0);
     };
+    const top100Films = [
+        { label: 'The Shawshank Redemption' },
+        { label: 'The Godfather' },
+        { label: 'The Godfather: Part II'},
+        { label: 'The Dark Knight' }, 
+    ]
     
     return (
         <Box sx={{paddingLeft:5, paddingRight:5, bgcolor: (theme) => theme.palette.background.default, color: (theme) => theme.palette.text.primary }} >
@@ -52,7 +60,13 @@ const MascotaForm = () => {
                         required
                         autoFocus
                     />
-                    <TextField
+                    <Autocomplete
+                    disablePortal
+                    options={top100Films}
+                    fullWidth
+                    renderInput={(params) => 
+                        <TextField
+                        {...params}
                         type="text"
                         variant='outlined'
                         label="Especie"
@@ -60,6 +74,15 @@ const MascotaForm = () => {
                         value={especie}
                         fullWidth
                         required
+                        InputProps={{
+                            endAdornment: (
+                              <IconButton type="button" sx={{ p: '2px' }} aria-label="search">
+                              <AddCircleIcon />
+                              </IconButton>
+                            ),
+                          }}
+                    />
+                    }
                     />
                     <TextField
                         type="text"

@@ -1,6 +1,18 @@
-import { useState, useMemo } from "react";
+import React, {useState, useEffect, useMemo} from 'react';
+import { TextField, Button, Container, Stack, Typography } from '@mui/material';
+import { Link, useNavigate } from "react-router-dom"
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid2';
+import FormGroup from '@mui/material/FormGroup';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import IconButton from '@mui/material/IconButton';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import Autocomplete from '@mui/material/Autocomplete';
+
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -12,97 +24,187 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
-import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
 
-import BasicButtons from '../CrudButtons';
-import SearchBar from '../SearchBar';
-import ServicioForm from './ServicioForm';
+export default function VentaForm(){
+    const [producto, setProducto] = useState('')
+    const [codigo, setCodigo] = useState('')
+    const [precio, setPrecio] = useState('')
+    const [cantidad, setCantidad] = useState('')
+    const [tipo, setTipo] = useState('')
+    const [cantidadStock, setCantidadStock] = useState('')
+    const [fechaVenta, setFechaVenta] = useState(null)
+    const [fechaVenc, setFechaVenc] = useState(null)
 
-export default function Servicios(){
-    const [windowView, setWindowView ] = useState('');
-    const handleClick = () =>{
-      setWindowView('form')
+    const navigate = useNavigate();
+
+    function handleSubmit(event) {
+        event.preventDefault();
     }
 
-    return (
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2}>
-          <Grid size={4} >
-            <SearchBar />
-          </Grid>
-          <Grid size={8}>
-            <BasicButtons handleNewClick= {handleClick} />
-          </Grid>
-          <Grid size={12}>
-          {windowView === 'form' ? (
-            <ServicioForm />
-          ) : (
-            <EnhancedTable/>
-          )}
-          </Grid>
-          <Grid size={8}>
+    const handleCancel = () => {
+        navigate(0);
+    };
+    const products = [
+        { label: 'Antipulgas y garrapatas' },
+        { label: 'Desparasitante interno' },
+        { label: 'Alimento medicinal para mascotas' },
+        { label: 'Antiinflamatorio para perros' },
+        { label: 'Suplemento articular' },
+        { label: 'Shampoo dermatológico' },
+        { label: 'Pomada cicatrizante' },
+        { label: 'Vitaminas para perros y gatos' },
+        { label: 'Lentes de contacto veterinarios' },
+        { label: 'Solución limpiadora para oídos' },
+    ]
 
-          </Grid>
-        </Grid>
-      </Box>
-    );
+    useEffect(() => {
+      const fetchDate = async () => {
+        try {
+          const response = await fetch('http://worldtimeapi.org/api/timezone/America/La_Paz');
+          const data = await response.json();
+          const date = new Date(data.datetime);
+          setFechaVenta(date.toISOString().split('T')[0]);
+        } catch (error) {
+          console.error('Error fetching date:', error);
+        }
+      };
+  
+      fetchDate();
+    }, []);
+    
+    return (
+        <Box sx={{paddingLeft:10, paddingRight:10, bgcolor: (theme) => theme.palette.background.default, color: (theme) => theme.palette.text.primary }} >
+            <Typography variant="h6" component="div" sx={{ marginBottom: 2 , textAlign: 'left', color: 'primary.main'}}>
+                Registrar Venta
+            </Typography>
+            <form onSubmit={handleSubmit} action={<Link to="/login" />}>
+                <Stack spacing={2} direction="row" sx={{marginBottom: 4 }}>
+                <Autocomplete
+                    disablePortal
+                    options={products}
+                    fullWidth
+                    renderInput={(params) => 
+                        <TextField
+                        {...params}
+                        type="text"
+                        variant='outlined'
+                        label="Producto"
+                        onChange={e => setProducto(e.target.value.toUpperCase())}
+                        value={producto}
+                        fullWidth
+                        required
+                        />}
+                    />
+                    <TextField
+                        type="text"
+                        variant='outlined'
+                        label="Codigo"
+                        onChange={e => setCodigo(e.target.value.toUpperCase())}
+                        value={codigo}
+                        fullWidth
+                        required
+                        autoFocus
+                    />
+                    <TextField
+                        type="text"
+                        variant='outlined'
+                        label="Precio"
+                        onChange={e => setPrecio(e.target.value.toUpperCase())}
+                        value={precio}
+                        fullWidth
+                        required
+                        autoFocus
+                    />
+                    <TextField
+                        type="text"
+                        variant='outlined'
+                        label="Cantidad"
+                        onChange={e => setCantidad(e.target.value.toUpperCase())}
+                        value={cantidad}
+                        required
+                        fullWidth
+                    />
+                <Button color='success' type="submit">Agregar</Button>
+                </Stack>
+                <Stack spacing={2} direction="row" sx={{marginBottom: 4 }}>
+                    <TextField
+                        type="text"
+                        variant='outlined'
+                        label="Presentación/Tipo"
+                        onChange={e => setTipo(e.target.value.toUpperCase())}
+                        value={tipo}
+                        fullWidth
+                        disabled
+                    />
+                    <TextField
+                        type="text"
+                        variant='outlined'
+                        label="Cantidad en stock"
+                        onChange={e => setCantidadStock(e.target.value.toUpperCase())}
+                        value={cantidadStock}
+                        fullWidth
+                        disabled
+                    />
+                    <TextField
+                        type="date"
+                        variant='outlined'
+                        label="Fecha de vencimiento"
+                        onChange={e => setFechaVenc(e.target.value.toUpperCase())}
+                        value={fechaVenc}
+                        fullWidth
+                        disabled
+                        slotProps={{
+                            inputLabel: {
+                            shrink: true,
+                            },
+                        }}
+                    />
+                    <TextField
+                        type="date"
+                        variant='outlined'
+                        label="Fecha de venta"
+                        onChange={e => setFechaVenta(e.target.value.toUpperCase())}
+                        value={fechaVenta}
+                        fullWidth
+                        slotProps={{
+                            inputLabel: {
+                            shrink: true,
+                            },
+                        }}
+                    />
+                </Stack>
+                <Button variant="outlined"  color='success' type="submit">Registrar Venta</Button>
+                <Button variant="outlined"  color='error' onClick={handleCancel} >Cancelar</Button>
+            </form> 
+            <VentaTable/>
+        </Box>
+    )
 }
 
-function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, obs) {
+
+function createData(id, producto, cantidad, precio, subtotal) {
     return {
       id,
-      corte,
-      baño,
-      estetica,
-      cepillado,
-      fecha,
-      hora,
+      producto,
+      cantidad,
       precio,
-      obs
+      subtotal,
     };
   }
 
   const rows = [
-    createData(1, true, true, true, true, "2024-10-01", "10:00", 25.00, ""),
-    createData(2, false, false, false, false, "2024-10-02", "11:00", 30.00, ""),
-    createData(3, true, true, true, true, "2024-10-03", "09:00", 40.00, ""),
-    createData(4, false, true, true, true, "2024-10-04", "14:00", 50.00, ""),
-    createData(5, true, false, false, true, "2024-10-05", "16:00", 35.00, ""),
-    createData(6, false, true, false, false, "2024-10-06", "12:00", 20.00, ""),
-    createData(7, true, false, false, false, "2024-10-07", "10:30", 15.00, ""),
-    createData(8, false, true, true, true, "2024-10-08", "17:00", 18.00, ""),
-    createData(9, true, false, false, true, "2024-10-09", "15:00", 22.00, ""),
-    createData(10, false, true, true, true, "2024-10-10", "13:00", 55.00, ""),
-    createData(11, true, false, false, false, "2024-10-11", "09:30", 20.00, ""),
-    createData(12, true, true, true, true, "2024-10-12", "11:30", 45.00, ""),
-    createData(13, false, true, true, true, "2024-10-13", "14:30", 60.00, ""),
-    createData(14, true, false, false, false, "2024-10-14", "10:15", 12.00, ""),
-    createData(15, false, true, true, true, "2024-10-15", "16:30", 38.00, ""),
-    createData(1, true, true, true, true, "2024-10-01", "10:00", 25.00, ""),
-    createData(2, false, false, false, false, "2024-10-02", "11:00", 30.00, ""),
-    createData(3, true, true, true, true, "2024-10-03", "09:00", 40.00, ""),
-    createData(4, false, true, true, true, "2024-10-04", "14:00", 50.00, ""),
-    createData(5, true, false, false, true, "2024-10-05", "16:00", 35.00, ""),
-    createData(6, false, true, false, false, "2024-10-06", "12:00", 20.00, ""),
-    createData(7, true, false, false, false, "2024-10-07", "10:30", 15.00, ""),
-    createData(8, false, true, true, true, "2024-10-08", "17:00", 18.00, ""),
-    createData(9, true, false, false, true, "2024-10-09", "15:00", 22.00, ""),
-    createData(10, false, true, true, true, "2024-10-10", "13:00", 55.00, ""),
-    createData(11, true, false, false, false, "2024-10-11", "09:30", 20.00, ""),
-    createData(12, true, true, true, true, "2024-10-12", "11:30", 45.00, ""),
-    createData(13, false, true, true, true, "2024-10-13", "14:30", 60.00, ""),
-    createData(14, true, false, false, false, "2024-10-14", "10:15", 12.00, ""),
-    createData(15, false, true, true, true, "2024-10-15", "16:30", 38.00, "")
-  ];  
+    createData(1, "producto A", 1, 25.00, 25.00),
+    createData(2, "producto B", 2, 30.00, 60.00),
+    createData(3, "producto A", 1, 40.00, 40.00),
+    createData(4, "producto C", 3, 50.00, 150.00),
+    createData(5, "producto A", 1, 35.00, 35.00),
+    createData(6, "producto B", 1, 20.00, 20.00),
+  ];
 
   function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -122,76 +224,28 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
   
   const headCells = [
     {
-      id: 'nombre',
+      id: 'producto',
       numeric: false,
       disablePadding: false,
-      label: 'NOMBRE',
+      label: 'PRODUCTO',
     },
     {
-      id: 'telefono',
+      id: 'cantidad',
       numeric: false,
       disablePadding: false,
-      label: 'TELEFONO',
-    },
-    {
-      id: 'mascota',
-      numeric: false,
-      disablePadding: false,
-      label: 'MASCOTA',
-    },
-    {
-      id: 'corte',
-      numeric: false,
-      disablePadding: false,
-      label: 'CORTE',
-    },
-    {
-      id: 'baño',
-      numeric: false,
-      disablePadding: false,
-      label: 'BAÑO',
-    },
-    {
-      id: 'estetica',
-      numeric: false,
-      disablePadding: false,
-      label: 'ESTETICA',
-    },
-    {
-      id: 'cepillado',
-      numeric: false,
-      disablePadding: false,
-      label: 'CEPILLADO',
-    },
-    {
-      id: 'limpoidos',
-      numeric: false,
-      disablePadding: false,
-      label: 'LIMP. OIDOS',
-    },
-    {
-      id: 'fecha',
-      numeric: false,
-      disablePadding: false,
-      label: 'FECHA',
-    },
-    {
-      id: 'hora',
-      numeric: false,
-      disablePadding: false,
-      label: 'HORA',
+      label: 'CANTIDAD',
     },
     {
       id: 'precio',
-      numeric: true,
-      disablePadding: false,
-      label: 'PRECIO',
-    },
-    {
-      id: 'obs',
       numeric: false,
       disablePadding: false,
-      label: 'OBSERVACIONES',
+      label: 'PRECIO (unit)',
+    },
+    {
+        id: 'subtotal',
+        numeric: false,
+        disablePadding: false,
+        label: 'SUBTOTAL',
     },
   ];
   
@@ -282,7 +336,7 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
             id="tableTitle"
             component="div"
           >
-            LISTA DE SERVICIOS
+            LISTA DE PRODUCTOS AGREGADOS
           </Typography>
         )}
         {numSelected > 0 ? (
@@ -306,7 +360,7 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
     numSelected: PropTypes.number.isRequired,
   };
   
-  function EnhancedTable() {
+  function VentaTable() {
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('calories');
     const [selected, setSelected] = useState([]);
@@ -418,19 +472,11 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
                         scope="row"
                         align="left"
                       >
-                        {row.nombre} 
-                      </TableCell>
-                      <TableCell align="left">{row.telefono}</TableCell>
-                      <TableCell align="left">{row.mascota}</TableCell>
-                      <TableCell align="left">{ row.corte ? <CheckIcon/> : <CloseIcon/> }</TableCell>
-                      <TableCell align="left">{ row.baño ? <CheckIcon/> : <CloseIcon/> }</TableCell>
-                      <TableCell align="left">{row.estetica ? <CheckIcon/> : <CloseIcon/> }</TableCell>
-                      <TableCell align="left">{row.cepillado ? <CheckIcon/> : <CloseIcon/>}</TableCell>
-                      <TableCell align="left">{row.limpoidos ? <CheckIcon/> : <CloseIcon/>}</TableCell>
-                      <TableCell align="left">{row.fecha}</TableCell>
-                      <TableCell align="left">{row.hora}</TableCell>
-                      <TableCell align="center">{row.precio}</TableCell>
-                      <TableCell align="left">{row.obs}</TableCell>
+                        {row.producto} 
+                    </TableCell>
+                      <TableCell align="left">{row.cantidad}</TableCell>
+                      <TableCell align="left">{ row.precio}</TableCell>
+                      <TableCell align="left">{ row.subtotal}</TableCell>
                     </TableRow>
                   );
                 })}

@@ -19,6 +19,7 @@ export default function ServicioForm(){
     const [fecha, setFecha] = useState(null)
     const [hora, setHora] = useState(null)
     const [precio, setPrecio] = useState(0.0)
+    const [tipoPago, setTipoPago] = useState('')
     const [observaciones, setObservaciones] = useState('')
  
     function handleSubmit(event) {
@@ -135,6 +136,14 @@ export default function ServicioForm(){
                             shrink: true,
                             },
                         }}
+                    />
+                    <TextField
+                        type="text"
+                        variant='outlined'
+                        label="Forma de pago"
+                        onChange={e => setTipoPago(e.target.value.toUpperCase())}
+                        value={tipoPago}
+                        fullWidth
                     />
                     <TextField
                         type="date"

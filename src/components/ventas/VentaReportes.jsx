@@ -20,89 +20,229 @@ import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { TextField, InputAdornment } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
-import BasicButtons from '../CrudButtons';
-import SearchBar from '../SearchBar';
-import ServicioForm from './ServicioForm';
+import Button from '@mui/material/Button';
+import ButtonGroup from '@mui/material/ButtonGroup';
+import Tabs from '@mui/material/Tabs';
+import Tab from '@mui/material/Tab';
+import BiotechIcon from '@mui/icons-material/Biotech';
+import VaccinesIcon from '@mui/icons-material/Vaccines';
+import MedicationLiquidIcon from '@mui/icons-material/MedicationLiquid';
+import EmergencyIcon from '@mui/icons-material/Emergency';
+import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
+import FilterFramesIcon from '@mui/icons-material/FilterFrames';
+import VoiceChatIcon from '@mui/icons-material/VoiceChat';
 
-export default function Servicios(){
-    const [windowView, setWindowView ] = useState('');
-    const handleClick = () =>{
-      setWindowView('form')
-    }
 
-    return (
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2}>
-          <Grid size={4} >
-            <SearchBar />
-          </Grid>
-          <Grid size={8}>
-            <BasicButtons handleNewClick= {handleClick} />
-          </Grid>
-          <Grid size={12}>
-          {windowView === 'form' ? (
-            <ServicioForm />
-          ) : (
-            <EnhancedTable/>
-          )}
-          </Grid>
-          <Grid size={8}>
+export default function VentaReportes(){
 
-          </Grid>
-        </Grid>
-      </Box>
-    );
+    return(
+        <div>
+        <ReportePanel/>
+        <ReportesTable />
+        </div>
+    )
 }
 
-function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, obs) {
+function ReportePanel(){
+    const [type, setType] = useState('');
+    const {dias, setDias} = useState('');
+    const handleChange = (event) => {
+      setType(event.target.value);
+      if(type === 'dia'){
+        setDias('1')
+      }
+      else if(type==='mes'){
+        setDias('31')
+      }
+    }
+    return(
+        <Card maxWidth sx={{paddingRight:3, paddingLeft: 3, border:0 }}>
+        <CardContent>
+        <ReporteTabs />
+        <Typography variant="h6" component="div" sx={{ marginBottom: 1 , textAlign: 'left', color: 'primary.main'}}>
+            BUSCAR REPORTE
+          </Typography>
+        <FormControl sx={{ m: 1, minWidth: 115}}>
+            <Select id="searchtype" onChange={handleChange} displayEmpty defaultValue={'nombre'} sx={{ height: 34 ,fontSize: '0.9rem' , padding: '5px' }} >
+                <MenuItem value={'dia'}>DIA</MenuItem>
+                <MenuItem value={'mes'}>MES</MenuItem>
+            </Select>
+        </FormControl>
+      <FormControl sx={{ m: 1, minWidth: 200}}>
+      <TextField 
+        variant="standard" placeholder= {`Ingrese la cantidad en dias ${type}`} fullWidth color="success" focused 
+        InputProps={{
+          startAdornment: (
+            <IconButton type="button" sx={{ p: '2px' }} aria-label="search">
+            <SearchIcon />
+            </IconButton>
+          ),
+        }}
+      />
+      </FormControl>
+          <Typography variant="h6" component="div" sx={{ marginBottom: 2, marginTop:4 , textAlign: 'left', color: 'primary.main'}}>
+            REPORTE DE VENTAS
+          </Typography>
+          <Grid container spacing={0} sx={{textAlign: 'left'}}>
+            <Grid size={3}>
+                <Typography variant="body1">
+                  <strong>TOTAL DE VENTAS DE MES</strong> 
+                </Typography>
+            </Grid>
+            <Grid size={3}>
+                <Typography variant="body1">
+                  <strong>BS 5000:</strong> 
+                </Typography>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </Card>
+    )
+}
+
+
+function CustomTabPanel(props) {
+  const { children, value, index, ...other } = props;
+
+  return (
+    <div
+      role="tabpanel"
+      hidden={value !== index}
+      id={`simple-tabpanel-${index}`}
+      aria-labelledby={`simple-tab-${index}`}
+      {...other}
+    >
+      {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
+    </div>
+  );
+}
+
+CustomTabPanel.propTypes = {
+  children: PropTypes.node,
+  index: PropTypes.number.isRequired,
+  value: PropTypes.number.isRequired,
+};
+
+function a11yProps(index) {
+  return {
+    id: `simple-tab-${index}`,
+    'aria-controls': `simple-tabpanel-${index}`,
+  };
+}
+function ReporteTabs() {
+  const [value, setValue] = useState(0);
+  const [openTrat, setOpenTrat] = useState(false);
+  const [openVac, setOpenVac] = useState(false);
+  const [openDesp, setOpenDesp] = useState(false);
+  const [openSupr, setOpenSupr] = useState(false);
+
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+  
+  const handleClickOpenTrat = () => {
+    setOpenTrat(true);
+  };
+  const handleCloseTrat = () => {
+    setOpenTrat(false);
+  };
+
+  const handleClickOpenVac = () => {
+    setOpenVac(true);
+  };
+  const handleCloseVac = () => {
+    setOpenVac(false);
+  };
+
+  const handleClickOpenDesp = () => {
+    setOpenDesp(true);
+  };
+  const handleCloseDesp = () => {
+    setOpenDesp(false);
+  };
+
+  const handleClickOpenSupr = () => {
+    setOpenSupr(true);
+  };
+  const handleCloseSupr = () => {
+    setOpenSupr(false);
+  };
+
+  return (
+    <Card maxWidth sx={{paddingRight:3, paddingLeft: 3, border:0 }}>
+    <CardContent>
+      <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+        <Tabs value={value} onChange={handleChange} >
+          <Tab icon={<MedicalInformationIcon />} label="Reporte Productos" {...a11yProps(0)} />
+          <Tab icon={<VaccinesIcon />} label="Reporte Tratamientos" {...a11yProps(1)} />
+          <Tab icon={<MedicationLiquidIcon />} label="Reporte Peluqueria" {...a11yProps(2)} />
+        </Tabs>
+      </Box>
+        <CustomTabPanel value={value} index={0}>
+          <ButtonGroup variant="contained"  sx={{marginBottom: 3 }} >
+            <Button color= 'success' size="small" onClick={ handleClickOpenTrat } >Agregar</Button>
+            <Button color= 'info' size="small"  >Modificar</Button>
+            <Button color= 'error' size="small"  >Eliminar</Button>
+          </ButtonGroup>
+
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={1}>
+        <ButtonGroup variant="contained" sx={{marginBottom: 3 }} >
+            <Button color= 'success' size="small" onClick={ handleClickOpenVac}>Agregar</Button>
+            <Button color= 'info' size="small"  >Modificar</Button>
+            <Button color= 'error' size="small"  >Eliminar</Button>
+          </ButtonGroup>
+
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={2}>
+          <ButtonGroup variant="contained"  sx={{marginBottom: 3 }} >
+            <Button color= 'success' size="small" onClick={ handleClickOpenDesp }>Agregar</Button>
+            <Button color= 'info' size="small"  >Modificar</Button>
+            <Button color= 'error' size="small"  >Eliminar</Button>
+          </ButtonGroup>
+
+        </CustomTabPanel>
+      </CardContent>
+      </Card>
+  );
+}
+
+
+function createData(id, productos, cantidad, precio , total, fecha) {
     return {
       id,
-      corte,
-      baño,
-      estetica,
-      cepillado,
-      fecha,
-      hora,
+      productos,
+      cantidad,
       precio,
-      obs
+      total,
+      fecha,
     };
   }
 
   const rows = [
-    createData(1, true, true, true, true, "2024-10-01", "10:00", 25.00, ""),
-    createData(2, false, false, false, false, "2024-10-02", "11:00", 30.00, ""),
-    createData(3, true, true, true, true, "2024-10-03", "09:00", 40.00, ""),
-    createData(4, false, true, true, true, "2024-10-04", "14:00", 50.00, ""),
-    createData(5, true, false, false, true, "2024-10-05", "16:00", 35.00, ""),
-    createData(6, false, true, false, false, "2024-10-06", "12:00", 20.00, ""),
-    createData(7, true, false, false, false, "2024-10-07", "10:30", 15.00, ""),
-    createData(8, false, true, true, true, "2024-10-08", "17:00", 18.00, ""),
-    createData(9, true, false, false, true, "2024-10-09", "15:00", 22.00, ""),
-    createData(10, false, true, true, true, "2024-10-10", "13:00", 55.00, ""),
-    createData(11, true, false, false, false, "2024-10-11", "09:30", 20.00, ""),
-    createData(12, true, true, true, true, "2024-10-12", "11:30", 45.00, ""),
-    createData(13, false, true, true, true, "2024-10-13", "14:30", 60.00, ""),
-    createData(14, true, false, false, false, "2024-10-14", "10:15", 12.00, ""),
-    createData(15, false, true, true, true, "2024-10-15", "16:30", 38.00, ""),
-    createData(1, true, true, true, true, "2024-10-01", "10:00", 25.00, ""),
-    createData(2, false, false, false, false, "2024-10-02", "11:00", 30.00, ""),
-    createData(3, true, true, true, true, "2024-10-03", "09:00", 40.00, ""),
-    createData(4, false, true, true, true, "2024-10-04", "14:00", 50.00, ""),
-    createData(5, true, false, false, true, "2024-10-05", "16:00", 35.00, ""),
-    createData(6, false, true, false, false, "2024-10-06", "12:00", 20.00, ""),
-    createData(7, true, false, false, false, "2024-10-07", "10:30", 15.00, ""),
-    createData(8, false, true, true, true, "2024-10-08", "17:00", 18.00, ""),
-    createData(9, true, false, false, true, "2024-10-09", "15:00", 22.00, ""),
-    createData(10, false, true, true, true, "2024-10-10", "13:00", 55.00, ""),
-    createData(11, true, false, false, false, "2024-10-11", "09:30", 20.00, ""),
-    createData(12, true, true, true, true, "2024-10-12", "11:30", 45.00, ""),
-    createData(13, false, true, true, true, "2024-10-13", "14:30", 60.00, ""),
-    createData(14, true, false, false, false, "2024-10-14", "10:15", 12.00, ""),
-    createData(15, false, true, true, true, "2024-10-15", "16:30", 38.00, "")
-  ];  
+    { id: 1, productos: "PRODUCTO 1", cantidad: 2, precio: 25.00, total: 50.00, fecha: "2024-10-01" },
+    { id: 2, productos: "PRODUCTO 2", cantidad: 1, precio: 30.00, total: 30.00, fecha: "2024-10-02" },
+    { id: 3, productos: "PRODUCTO 3", cantidad: 3, precio: 40.00, total: 120.00, fecha: "2024-10-03" },
+    { id: 4, productos: "PRODUCTO 4", cantidad: 2, precio: 50.00, total: 100.00, fecha: "2024-10-04" },
+    { id: 5, productos: "PRODUCTO 5", cantidad: 1, precio: 35.00, total: 35.00, fecha: "2024-10-05" },
+    { id: 6, productos: "PRODUCTO 6", cantidad: 2, precio: 20.00,  total: 40.00, fecha: "2024-10-06" },
+    { id: 7, productos: "PRODUCTO 7", cantidad: 4, precio: 15.00, total: 60.00, fecha: "2024-10-07" },
+    { id: 8, productos: "PRODUCTO 8", cantidad: 3, precio: 18.00,  total: 54.00, fecha: "2024-10-08" },
+    { id: 9, productos: "PRODUCTO 9", cantidad: 2, precio: 22.00,  total: 44.00, fecha: "2024-10-09" },
+    { id: 10, productos: "PRODUCTO 10", cantidad: 5, precio: 55.00, total: 275.00, fecha: "2024-10-10" },
+    { id: 11, productos: "PRODUCTO 1", cantidad: 3, precio: 20.00,  total: 60.00, fecha: "2024-10-11" },
+    { id: 12, productos: "PRODUCTO 2", cantidad: 1, precio: 45.00,  total: 45.00, fecha: "2024-10-12" },
+    { id: 13, productos: "PRODUCTO 3", cantidad: 2, precio: 60.00, total: 120.00, fecha: "2024-10-13" },
+    { id: 14, productos: "PRODUCTO 4", cantidad: 1, precio: 12.00, total: 12.00, fecha: "2024-10-14" },
+  ];
 
   function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -122,76 +262,40 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
   
   const headCells = [
     {
-      id: 'nombre',
+        id: 'id',
+        numeric: false,
+        disablePadding: false,
+        label: 'ID',
+      },
+    {
+      id: 'productos',
       numeric: false,
       disablePadding: false,
-      label: 'NOMBRE',
+      label: 'PRODUCTOS',
     },
     {
-      id: 'telefono',
+      id: 'cantidad',
       numeric: false,
       disablePadding: false,
-      label: 'TELEFONO',
+      label: 'CANTIDAD',
     },
     {
-      id: 'mascota',
+      id: 'precio',
       numeric: false,
       disablePadding: false,
-      label: 'MASCOTA',
+      label: 'PRECIO UNIT',
     },
     {
-      id: 'corte',
+      id: 'total',
       numeric: false,
       disablePadding: false,
-      label: 'CORTE',
-    },
-    {
-      id: 'baño',
-      numeric: false,
-      disablePadding: false,
-      label: 'BAÑO',
-    },
-    {
-      id: 'estetica',
-      numeric: false,
-      disablePadding: false,
-      label: 'ESTETICA',
-    },
-    {
-      id: 'cepillado',
-      numeric: false,
-      disablePadding: false,
-      label: 'CEPILLADO',
-    },
-    {
-      id: 'limpoidos',
-      numeric: false,
-      disablePadding: false,
-      label: 'LIMP. OIDOS',
+      label: 'TOTAL VENTA',
     },
     {
       id: 'fecha',
       numeric: false,
       disablePadding: false,
       label: 'FECHA',
-    },
-    {
-      id: 'hora',
-      numeric: false,
-      disablePadding: false,
-      label: 'HORA',
-    },
-    {
-      id: 'precio',
-      numeric: true,
-      disablePadding: false,
-      label: 'PRECIO',
-    },
-    {
-      id: 'obs',
-      numeric: false,
-      disablePadding: false,
-      label: 'OBSERVACIONES',
     },
   ];
   
@@ -282,7 +386,7 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
             id="tableTitle"
             component="div"
           >
-            LISTA DE SERVICIOS
+            LISTA DE VENTAS
           </Typography>
         )}
         {numSelected > 0 ? (
@@ -306,7 +410,7 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
     numSelected: PropTypes.number.isRequired,
   };
   
-  function EnhancedTable() {
+function ReportesTable() {
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('calories');
     const [selected, setSelected] = useState([]);
@@ -369,7 +473,7 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
     );
   
     return (
-      <Box sx={{ width: '100%' }}>
+      <Box sx={{ width: '100%', paddingRight:3, paddingLeft: 3 }}>
         <Paper sx={{ width: '100%', mb: 2, overflow: 'hidden' }}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer sx={{ maxHeight: 450 }}>
@@ -418,19 +522,13 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
                         scope="row"
                         align="left"
                       >
-                        {row.nombre} 
+                        {row.id} 
                       </TableCell>
-                      <TableCell align="left">{row.telefono}</TableCell>
-                      <TableCell align="left">{row.mascota}</TableCell>
-                      <TableCell align="left">{ row.corte ? <CheckIcon/> : <CloseIcon/> }</TableCell>
-                      <TableCell align="left">{ row.baño ? <CheckIcon/> : <CloseIcon/> }</TableCell>
-                      <TableCell align="left">{row.estetica ? <CheckIcon/> : <CloseIcon/> }</TableCell>
-                      <TableCell align="left">{row.cepillado ? <CheckIcon/> : <CloseIcon/>}</TableCell>
-                      <TableCell align="left">{row.limpoidos ? <CheckIcon/> : <CloseIcon/>}</TableCell>
+                      <TableCell align="left">{row.productos}</TableCell>
+                      <TableCell align="left">{row.cantidad}</TableCell>
+                      <TableCell align="left">{ row.precio }</TableCell>
+                      <TableCell align="left">{row.total }</TableCell>
                       <TableCell align="left">{row.fecha}</TableCell>
-                      <TableCell align="left">{row.hora}</TableCell>
-                      <TableCell align="center">{row.precio}</TableCell>
-                      <TableCell align="left">{row.obs}</TableCell>
                     </TableRow>
                   );
                 })}

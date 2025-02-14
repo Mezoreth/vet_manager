@@ -24,19 +24,37 @@ import VisibilityOutlinedIcon from '@mui/icons-material/VisibilityOutlined';
 import { useNavigate } from "react-router-dom";
 import CircularProgress from '@mui/material/CircularProgress';
 import axios from  'axios';
+import AlertMessage from '../AlertMessage';
+
+import Snackbar from '@mui/material/Snackbar';
+import Alert from '@mui/material/Alert';
+import Slide from '@mui/material/Slide';
 
 export default function Clientes() {
   const [viewForm, setViewForm ] = useState('');
   const [clientes, setClientes]= useState([]);
   const [selectedCliente, setSelectedCliente] = useState(null);
   const [selectedId, setSelectedId] = useState(null);
-  const [reset, setReset] = useState(0);
+  const [resetList, setResetList] = useState(0);
+  const [alert, setAlert] = useState({ open: false, message: '', alertColor: 'success'});
+  const [open, setOpen] = useState(false);
+  const [alertMessage, setAlertMessage] = useState('')
+  const [alertColor, setAlertColor] = useState('')
+
+  const showAlert = (message, severity = 'success') => {
+    setAlert({ open: true, message, severity });
+  };
+
+  const hideAlert = () => {
+    setAlert({ open: false, message: '', severity: 'success' });
+  };
 
   const handleNewClick = () =>{
     setViewForm('form')
   }
 
   const handleEditClick = () =>{
+
     setViewForm('form')
   }
 
@@ -48,14 +66,17 @@ export default function Clientes() {
         console.log('Cliente eliminado exitosamente', response.data);
         setSelectedCliente(null);
         setSelectedId(null);
-        setReset(reset+1);
+        setResetList(resetList+1);
     })
     .catch(error => {
         console.error('Hubo un error al eliminar el cliente:', error);
     });
     }
     else {
-      console.log('seleccionar')
+      setAlert({open:true, message: 'Seleccione un usuario', alertColor:'error'})
+      setAlertMessage('Debe seleccionar un cliente');
+      setAlertColor('error');
+      setOpen(true);
     }
   }
 
@@ -74,7 +95,7 @@ export default function Clientes() {
       .catch(error =>{
         console.error('Hubo un error al obtener los datos', error);
       });
-  },[reset])
+  },[resetList])
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -90,13 +111,13 @@ export default function Clientes() {
         </Grid>
         <Grid size={8}>
         {viewForm === 'form' ? (
-            <ClienteForm setViewForm={setViewForm} cliente={selectedCliente}/>
+            <ClienteForm setViewForm={setViewForm} cliente={selectedCliente} resetList = {resetList} setResetList = { setResetList}/>
           ) : (
-            <div>
               <ClienteCard  cliente = {selectedCliente} />
-              <MascotaCard />
-            </div>
           )}
+        </Grid>
+        <Grid size={12}>
+        <AlertMessage open={open} onClose={() => setOpen(false)}  message={alertMessage} color={alertColor} />
         </Grid>
       </Grid>
     </Box>
@@ -132,6 +153,7 @@ function ClientesList({clientes, selectedId, handleListItemClick }) {
 function ClienteCard({cliente}) {
   if (!cliente) return <Typography>No hay cliente seleccionado</Typography>;
   return (
+    <div>
       <Card maxWidth sx={{paddingRight:3, paddingLeft: 3, border:0 }}>
         <CardContent>
           <Typography variant="h6" component="div" sx={{ marginBottom: 2 , textAlign: 'left', color: 'primary.main'}}>
@@ -167,15 +189,29 @@ function ClienteCard({cliente}) {
           </Grid>
         </CardContent>
       </Card>
+      <MascotaCard id={cliente.id_cliente} />
+    </div>
   );
 }
 
-function MascotaCard() {
+function MascotaCard({id}) {
+  const [mascotas, setMascotas]= useState([]);
   const navigatePet = useNavigate();
 
   const handleNewClickPet=() => {
     navigatePet("/mascotas");
   }
+  useEffect(()=>{
+    axios.get(`http://127.0.0.1:3000/api/mascotas/${id}`)
+      .then(response =>{
+        setMascotas(response.data);
+        //console.log(JSON.stringify(response.data))
+      })
+      .catch(error =>{
+        console.error('Hubo un error al obtener los datos', error);
+      });
+  },[])
+  if (!mascotas || mascotas.length === 0) return <Typography variant="h5" sx={{ paddingLeft:3, textAlign: 'left', color: 'primary.main'}}>El cliente no tiene mascotas registradas </Typography>;
   return (
       <Card maxWidth sx={{paddingRight:3, paddingLeft: 3  }}>
         <CardContent>
@@ -194,13 +230,13 @@ function MascotaCard() {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {rows.map((row) => (
+                {mascotas.map((row) => (
                   <TableRow
                     key={row.name}
                     sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                   >
                     <TableCell component="th" scope="row">
-                      {row.nombre}
+                      {row.nombre_mascota}
                     </TableCell>
                     <TableCell align="center">{row.especie}</TableCell>
                     <TableCell align="center">{row.raza}</TableCell>
@@ -219,12 +255,3 @@ function MascotaCard() {
       </Card>
   );
 }
-
-function createData(nombre, especie, raza, color, id) {
-  return { nombre, especie, raza, color, id };
-}
-
-const rows = [
-  createData('MAX', 'CANINO', 'MESTIZOO', 'M', 5),
-  createData('MILO', 'FELINO', 'PERSA', 'H', 2),
-];

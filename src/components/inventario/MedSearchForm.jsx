@@ -1,6 +1,14 @@
-import { useState, useMemo } from "react";
+import React, {useState, forwardRef, useMemo} from 'react';
+import { TextField, InputAdornment , Button, Container, Stack, Typography, setRef } from '@mui/material';
+import { Link } from "react-router-dom"
+import Dialog from '@mui/material/Dialog';
+import DialogActions from '@mui/material/DialogActions';
+import DialogContent from '@mui/material/DialogContent';
+import DialogContentText from '@mui/material/DialogContentText';
+import DialogTitle from '@mui/material/DialogTitle';
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid2';
+import Checkbox from '@mui/material/Checkbox';
+import Slide from '@mui/material/Slide';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -12,97 +20,154 @@ import TablePagination from '@mui/material/TablePagination';
 import TableRow from '@mui/material/TableRow';
 import TableSortLabel from '@mui/material/TableSortLabel';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import Paper from '@mui/material/Paper';
-import Checkbox from '@mui/material/Checkbox';
 import IconButton from '@mui/material/IconButton';
 import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
 
-import BasicButtons from '../CrudButtons';
-import SearchBar from '../SearchBar';
-import ServicioForm from './ServicioForm';
 
-export default function Servicios(){
-    const [windowView, setWindowView ] = useState('');
-    const handleClick = () =>{
-      setWindowView('form')
-    }
+const Transition = forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+  });
+  
+export default function MedSearchForm({ open, onClose }) {
+    const [medicamento, setMedicamento] = useState('')
+    const [dosis, setDosis] = useState('')
+    const [via, setVia] = useState('SC')
+    const [precio, setPrecio] = useState('')
+    const [fecha, setFecha] = useState()
+    const [dia, setDia] = useState('')
+
+    function handleSubmit(event) {
+        event.preventDefault();
+    };
 
     return (
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2}>
-          <Grid size={4} >
-            <SearchBar />
-          </Grid>
-          <Grid size={8}>
-            <BasicButtons handleNewClick= {handleClick} />
-          </Grid>
-          <Grid size={12}>
-          {windowView === 'form' ? (
-            <ServicioForm />
-          ) : (
-            <EnhancedTable/>
-          )}
-          </Grid>
-          <Grid size={8}>
-
-          </Grid>
-        </Grid>
-      </Box>
-    );
+        <Dialog
+            maxWidth= "300px"
+            open={open}
+            TransitionComponent={Transition}
+            onClose={onClose}
+        >
+          <DialogContent>
+          <Typography variant="h6" component="div" sx={{ marginBottom: 2 , textAlign: 'left', color: 'primary.main'}}>
+                BUSCAR MEDICAMENTO FARMACIA
+            </Typography>
+            <form onSubmit={handleSubmit} action={<Link to="/login" />}>
+            <Stack spacing={2} direction="row" sx={{marginBottom: 4 }}>
+                    <TextField
+                        type="text"
+                        variant='outlined'
+                        label="Buscar Medicamento"
+                        onChange={e => setMedicamento(e.target.value.toUpperCase())}
+                        value={medicamento}
+                        fullWidth
+                        required
+                        InputProps={{
+                            startAdornment: (
+                              <InputAdornment position="start">
+                                Buscar
+                              </InputAdornment>
+                            ),
+                          }}
+                    />
+                </Stack>
+                <Stack spacing={2} direction="row" sx={{marginBottom: 4 }}>
+                    <TextField
+                        type="text"
+                        variant='outlined'
+                        label="Dosis ml"
+                        onChange={e => setDosis(e.target.value)}
+                        value={dosis}
+                        required
+                        fullWidth
+                    />
+                    <TextField
+                        type="text"
+                        variant='outlined'
+                        label="Via"
+                        onChange={e => setVia(e.target.value)}
+                        value={via}
+                        fullWidth
+                    />
+                    <TextField
+                        type="date"
+                        variant='outlined'
+                        label="Fecha"
+                        onChange={e => setFecha(e.target.value)}
+                        value={fecha}
+                        fullWidth
+                        required
+                        slotProps={{
+                            inputLabel: {
+                            shrink: true,
+                            },
+                        }}
+                    />
+                    <TextField
+                        type="text"
+                        variant='outlined'
+                        label="Frecuencia de aplicacion"
+                        onChange={e => setDia(e.target.value)}
+                        value={dia}
+                        fullWidth
+                    />
+                    <TextField
+                        type="text"
+                        variant='outlined'
+                        label="Tiempo"
+                        onChange={e => setDia(e.target.value)}
+                        value={dia}
+                        fullWidth
+                    />
+                    <TextField
+                        type="text"
+                        variant='outlined'
+                        label="cantidad"
+                        onChange={e => setDia(e.target.value)}
+                        value={dia}
+                        required
+                        fullWidth
+                    />
+                    <TextField
+                        type="text"
+                        variant='outlined'
+                        label="Precio"
+                        onChange={e => setDia(e.target.value)}
+                        value={dia}
+                        required
+                        fullWidth
+                    />
+                </Stack>
+                <Button variant="outlined"  color='success' >Seleccionar</Button>
+                <Button onClick={onClose} color='error'>Cancelar</Button>
+            </form> 
+            <MedicSearchTable />
+          </DialogContent>
+        </Dialog>
+    )
 }
 
-function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, obs) {
+
+function createData(id, medicamento, tipo, precio, vencimiento, cantidad) {
     return {
       id,
-      corte,
-      baño,
-      estetica,
-      cepillado,
-      fecha,
-      hora,
+      medicamento,
+      tipo,
       precio,
-      obs
+      vencimiento,
+      cantidad
     };
   }
 
   const rows = [
-    createData(1, true, true, true, true, "2024-10-01", "10:00", 25.00, ""),
-    createData(2, false, false, false, false, "2024-10-02", "11:00", 30.00, ""),
-    createData(3, true, true, true, true, "2024-10-03", "09:00", 40.00, ""),
-    createData(4, false, true, true, true, "2024-10-04", "14:00", 50.00, ""),
-    createData(5, true, false, false, true, "2024-10-05", "16:00", 35.00, ""),
-    createData(6, false, true, false, false, "2024-10-06", "12:00", 20.00, ""),
-    createData(7, true, false, false, false, "2024-10-07", "10:30", 15.00, ""),
-    createData(8, false, true, true, true, "2024-10-08", "17:00", 18.00, ""),
-    createData(9, true, false, false, true, "2024-10-09", "15:00", 22.00, ""),
-    createData(10, false, true, true, true, "2024-10-10", "13:00", 55.00, ""),
-    createData(11, true, false, false, false, "2024-10-11", "09:30", 20.00, ""),
-    createData(12, true, true, true, true, "2024-10-12", "11:30", 45.00, ""),
-    createData(13, false, true, true, true, "2024-10-13", "14:30", 60.00, ""),
-    createData(14, true, false, false, false, "2024-10-14", "10:15", 12.00, ""),
-    createData(15, false, true, true, true, "2024-10-15", "16:30", 38.00, ""),
-    createData(1, true, true, true, true, "2024-10-01", "10:00", 25.00, ""),
-    createData(2, false, false, false, false, "2024-10-02", "11:00", 30.00, ""),
-    createData(3, true, true, true, true, "2024-10-03", "09:00", 40.00, ""),
-    createData(4, false, true, true, true, "2024-10-04", "14:00", 50.00, ""),
-    createData(5, true, false, false, true, "2024-10-05", "16:00", 35.00, ""),
-    createData(6, false, true, false, false, "2024-10-06", "12:00", 20.00, ""),
-    createData(7, true, false, false, false, "2024-10-07", "10:30", 15.00, ""),
-    createData(8, false, true, true, true, "2024-10-08", "17:00", 18.00, ""),
-    createData(9, true, false, false, true, "2024-10-09", "15:00", 22.00, ""),
-    createData(10, false, true, true, true, "2024-10-10", "13:00", 55.00, ""),
-    createData(11, true, false, false, false, "2024-10-11", "09:30", 20.00, ""),
-    createData(12, true, true, true, true, "2024-10-12", "11:30", 45.00, ""),
-    createData(13, false, true, true, true, "2024-10-13", "14:30", 60.00, ""),
-    createData(14, true, false, false, false, "2024-10-14", "10:15", 12.00, ""),
-    createData(15, false, true, true, true, "2024-10-15", "16:30", 38.00, "")
-  ];  
+    createData(1, "Medicamento A", 25, "oral", 25.00, "2024-10-01", 1),
+    createData(2, "Medicamento B", 30, "intravenosa", 30.00, "2024-10-02", 1),
+    createData(3, "Medicamento A", 40, "oral", 40.00, "2024-10-03", 1),
+    createData(4, "Medicamento C", 50, "intramuscular", 50.00, "2024-10-04", 1),
+  ];
 
   function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -122,76 +187,34 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
   
   const headCells = [
     {
-      id: 'nombre',
+      id: 'medicamento',
       numeric: false,
       disablePadding: false,
-      label: 'NOMBRE',
+      label: 'MEDICAMENTO',
     },
     {
-      id: 'telefono',
+      id: 'tipo',
       numeric: false,
       disablePadding: false,
-      label: 'TELEFONO',
-    },
-    {
-      id: 'mascota',
-      numeric: false,
-      disablePadding: false,
-      label: 'MASCOTA',
-    },
-    {
-      id: 'corte',
-      numeric: false,
-      disablePadding: false,
-      label: 'CORTE',
-    },
-    {
-      id: 'baño',
-      numeric: false,
-      disablePadding: false,
-      label: 'BAÑO',
-    },
-    {
-      id: 'estetica',
-      numeric: false,
-      disablePadding: false,
-      label: 'ESTETICA',
-    },
-    {
-      id: 'cepillado',
-      numeric: false,
-      disablePadding: false,
-      label: 'CEPILLADO',
-    },
-    {
-      id: 'limpoidos',
-      numeric: false,
-      disablePadding: false,
-      label: 'LIMP. OIDOS',
-    },
-    {
-      id: 'fecha',
-      numeric: false,
-      disablePadding: false,
-      label: 'FECHA',
-    },
-    {
-      id: 'hora',
-      numeric: false,
-      disablePadding: false,
-      label: 'HORA',
+      label: 'TIPO',
     },
     {
       id: 'precio',
-      numeric: true,
+      numeric: false,
       disablePadding: false,
       label: 'PRECIO',
     },
     {
-      id: 'obs',
+        id: 'vencimiento',
+        numeric: false,
+        disablePadding: false,
+        label: 'VENCIMIENTO',
+    },
+    {
+      id: 'cantidad',
       numeric: false,
       disablePadding: false,
-      label: 'OBSERVACIONES',
+      label: 'CANTIDAD',
     },
   ];
   
@@ -282,7 +305,7 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
             id="tableTitle"
             component="div"
           >
-            LISTA DE SERVICIOS
+            LISTA DE MEDICAMENTOS
           </Typography>
         )}
         {numSelected > 0 ? (
@@ -306,7 +329,7 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
     numSelected: PropTypes.number.isRequired,
   };
   
-  function EnhancedTable() {
+  function MedicSearchTable() {
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('calories');
     const [selected, setSelected] = useState([]);
@@ -418,19 +441,12 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
                         scope="row"
                         align="left"
                       >
-                        {row.nombre} 
-                      </TableCell>
-                      <TableCell align="left">{row.telefono}</TableCell>
-                      <TableCell align="left">{row.mascota}</TableCell>
-                      <TableCell align="left">{ row.corte ? <CheckIcon/> : <CloseIcon/> }</TableCell>
-                      <TableCell align="left">{ row.baño ? <CheckIcon/> : <CloseIcon/> }</TableCell>
-                      <TableCell align="left">{row.estetica ? <CheckIcon/> : <CloseIcon/> }</TableCell>
-                      <TableCell align="left">{row.cepillado ? <CheckIcon/> : <CloseIcon/>}</TableCell>
-                      <TableCell align="left">{row.limpoidos ? <CheckIcon/> : <CloseIcon/>}</TableCell>
-                      <TableCell align="left">{row.fecha}</TableCell>
-                      <TableCell align="left">{row.hora}</TableCell>
-                      <TableCell align="center">{row.precio}</TableCell>
-                      <TableCell align="left">{row.obs}</TableCell>
+                        {row.medicamento} 
+                    </TableCell>
+                      <TableCell align="left">{row.tipo}</TableCell>
+                      <TableCell align="left">{ row.precio}</TableCell>
+                      <TableCell align="left">{ row.vencimiento}</TableCell>
+                      <TableCell align="left">{row.cantidad}</TableCell>
                     </TableRow>
                   );
                 })}

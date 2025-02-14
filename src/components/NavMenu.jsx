@@ -13,7 +13,7 @@ import SettingsIcon from '@mui/icons-material/Settings';
 import { Link } from "react-router-dom";
 
 export default function NavigationMenu() {
-  const [value, setValue] = useState(0);
+  const [value, setValue] = useState(null);
 
   return (
     <Box sx={{ width: 800 }}>
@@ -28,10 +28,10 @@ export default function NavigationMenu() {
         <BottomNavigationAction component={Link} to="/mascotas" label="MASCOTAS" icon={<PetsIcon fontSize= 'large' />} />
         <BottomNavigationAction component={Link} to="/inventario" label="INVENTARIO" icon={<InventoryIcon fontSize='large' />} />
         <BottomNavigationAction component={Link} to="/servicios" label="SERVICIOS" icon={<ContentCutIcon fontSize= 'large' />} />
-        <BottomNavigationAction label="VENTAS" icon={<PointOfSaleIcon fontSize= 'large' />} />
+        <BottomNavigationAction component={Link} to="/ventas" label="VENTAS" icon={<PointOfSaleIcon fontSize= 'large' />} />
         <BottomNavigationAction component={Link} to="/notificaciones" label="NOTIFICACIONES" icon={<NotificationsIcon fontSize= 'large' />} />
         <BottomNavigationAction component={Link} to="/usuarios" label="USUARIOS" icon={<AccountCircleIcon fontSize= 'large' />} />
-        <BottomNavigationAction label="CONFIGURACION" icon={<SettingsIcon fontSize= 'large' />} />
+        <BottomNavigationAction component={Link} to="/configuraciones" label="CONFIGURACION" icon={<SettingsIcon fontSize= 'large' />} />
       </BottomNavigation>
     </Box>
   );

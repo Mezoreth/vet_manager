@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
 import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid2';
 import PropTypes from 'prop-types';
 import { alpha } from '@mui/material/styles';
 import Table from '@mui/material/Table';
@@ -20,89 +19,42 @@ import Tooltip from '@mui/material/Tooltip';
 import DeleteIcon from '@mui/icons-material/Delete';
 import FilterListIcon from '@mui/icons-material/FilterList';
 import { visuallyHidden } from '@mui/utils';
-import CheckIcon from '@mui/icons-material/Check';
-import CloseIcon from '@mui/icons-material/Close';
+import Button from '@mui/material/Button';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import { TextField, InputAdornment } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
 
-import BasicButtons from '../CrudButtons';
-import SearchBar from '../SearchBar';
-import ServicioForm from './ServicioForm';
 
-export default function Servicios(){
-    const [windowView, setWindowView ] = useState('');
-    const handleClick = () =>{
-      setWindowView('form')
-    }
-
-    return (
-      <Box sx={{ flexGrow: 1 }}>
-        <Grid container spacing={2}>
-          <Grid size={4} >
-            <SearchBar />
-          </Grid>
-          <Grid size={8}>
-            <BasicButtons handleNewClick= {handleClick} />
-          </Grid>
-          <Grid size={12}>
-          {windowView === 'form' ? (
-            <ServicioForm />
-          ) : (
-            <EnhancedTable/>
-          )}
-          </Grid>
-          <Grid size={8}>
-
-          </Grid>
-        </Grid>
-      </Box>
-    );
-}
-
-function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, obs) {
+function createData(id, productos, cantidad, precio , total, fecha, estado) {
     return {
       id,
-      corte,
-      baño,
-      estetica,
-      cepillado,
-      fecha,
-      hora,
+      productos,
+      cantidad,
       precio,
-      obs
+      total,
+      fecha,
+      estado
     };
   }
 
   const rows = [
-    createData(1, true, true, true, true, "2024-10-01", "10:00", 25.00, ""),
-    createData(2, false, false, false, false, "2024-10-02", "11:00", 30.00, ""),
-    createData(3, true, true, true, true, "2024-10-03", "09:00", 40.00, ""),
-    createData(4, false, true, true, true, "2024-10-04", "14:00", 50.00, ""),
-    createData(5, true, false, false, true, "2024-10-05", "16:00", 35.00, ""),
-    createData(6, false, true, false, false, "2024-10-06", "12:00", 20.00, ""),
-    createData(7, true, false, false, false, "2024-10-07", "10:30", 15.00, ""),
-    createData(8, false, true, true, true, "2024-10-08", "17:00", 18.00, ""),
-    createData(9, true, false, false, true, "2024-10-09", "15:00", 22.00, ""),
-    createData(10, false, true, true, true, "2024-10-10", "13:00", 55.00, ""),
-    createData(11, true, false, false, false, "2024-10-11", "09:30", 20.00, ""),
-    createData(12, true, true, true, true, "2024-10-12", "11:30", 45.00, ""),
-    createData(13, false, true, true, true, "2024-10-13", "14:30", 60.00, ""),
-    createData(14, true, false, false, false, "2024-10-14", "10:15", 12.00, ""),
-    createData(15, false, true, true, true, "2024-10-15", "16:30", 38.00, ""),
-    createData(1, true, true, true, true, "2024-10-01", "10:00", 25.00, ""),
-    createData(2, false, false, false, false, "2024-10-02", "11:00", 30.00, ""),
-    createData(3, true, true, true, true, "2024-10-03", "09:00", 40.00, ""),
-    createData(4, false, true, true, true, "2024-10-04", "14:00", 50.00, ""),
-    createData(5, true, false, false, true, "2024-10-05", "16:00", 35.00, ""),
-    createData(6, false, true, false, false, "2024-10-06", "12:00", 20.00, ""),
-    createData(7, true, false, false, false, "2024-10-07", "10:30", 15.00, ""),
-    createData(8, false, true, true, true, "2024-10-08", "17:00", 18.00, ""),
-    createData(9, true, false, false, true, "2024-10-09", "15:00", 22.00, ""),
-    createData(10, false, true, true, true, "2024-10-10", "13:00", 55.00, ""),
-    createData(11, true, false, false, false, "2024-10-11", "09:30", 20.00, ""),
-    createData(12, true, true, true, true, "2024-10-12", "11:30", 45.00, ""),
-    createData(13, false, true, true, true, "2024-10-13", "14:30", 60.00, ""),
-    createData(14, true, false, false, false, "2024-10-14", "10:15", 12.00, ""),
-    createData(15, false, true, true, true, "2024-10-15", "16:30", 38.00, "")
-  ];  
+    { id: 1, productos: "PRODUCTO 1", cantidad: 2, precio: 25.00, total: 50.00, fecha: "2024-10-01", estado: "pendiente" },
+    { id: 2, productos: "PRODUCTO 2", cantidad: 1, precio: 30.00, total: 30.00, fecha: "2024-10-02", estado: "pendiente" },
+    { id: 3, productos: "PRODUCTO 3", cantidad: 3, precio: 40.00, total: 120.00, fecha: "2024-10-03", estado: "pendiente" },
+    { id: 4, productos: "PRODUCTO 4", cantidad: 2, precio: 50.00, total: 100.00, fecha: "2024-10-04", estado: "pendiente" },
+    { id: 5, productos: "PRODUCTO 5", cantidad: 1, precio: 35.00, total: 35.00, fecha: "2024-10-05", estado: "pendiente" },
+    { id: 6, productos: "PRODUCTO 6", cantidad: 2, precio: 20.00, total: 40.00, fecha: "2024-10-06", estado: "pendiente" },
+    { id: 7, productos: "PRODUCTO 7", cantidad: 4, precio: 15.00, total: 60.00, fecha: "2024-10-07", estado: "pendiente" },
+    { id: 8, productos: "PRODUCTO 8", cantidad: 3, precio: 18.00, total: 54.00, fecha: "2024-10-08", estado: "pendiente" },
+    { id: 9, productos: "PRODUCTO 9", cantidad: 2, precio: 22.00, total: 44.00, fecha: "2024-10-09", estado: "pendiente" },
+    { id: 10, productos: "PRODUCTO 10", cantidad: 5, precio: 55.00, total: 275.00, fecha: "2024-10-10", estado: "pendiente" },
+    { id: 11, productos: "PRODUCTO 1", cantidad: 3, precio: 20.00, total: 60.00, fecha: "2024-10-11", estado: "pendiente" },
+  ];
+  
 
   function descendingComparator(a, b, orderBy) {
     if (b[orderBy] < a[orderBy]) {
@@ -122,52 +74,34 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
   
   const headCells = [
     {
-      id: 'nombre',
+        id: 'id',
+        numeric: false,
+        disablePadding: false,
+        label: 'ID',
+      },
+    {
+      id: 'productos',
       numeric: false,
       disablePadding: false,
-      label: 'NOMBRE',
+      label: 'PRODUCTOS',
     },
     {
-      id: 'telefono',
+      id: 'cantidad',
       numeric: false,
       disablePadding: false,
-      label: 'TELEFONO',
+      label: 'CANTIDAD',
     },
     {
-      id: 'mascota',
+      id: 'precio',
       numeric: false,
       disablePadding: false,
-      label: 'MASCOTA',
+      label: 'PRECIO UNIT',
     },
     {
-      id: 'corte',
+      id: 'total',
       numeric: false,
       disablePadding: false,
-      label: 'CORTE',
-    },
-    {
-      id: 'baño',
-      numeric: false,
-      disablePadding: false,
-      label: 'BAÑO',
-    },
-    {
-      id: 'estetica',
-      numeric: false,
-      disablePadding: false,
-      label: 'ESTETICA',
-    },
-    {
-      id: 'cepillado',
-      numeric: false,
-      disablePadding: false,
-      label: 'CEPILLADO',
-    },
-    {
-      id: 'limpoidos',
-      numeric: false,
-      disablePadding: false,
-      label: 'LIMP. OIDOS',
+      label: 'TOTAL VENTA',
     },
     {
       id: 'fecha',
@@ -176,23 +110,17 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
       label: 'FECHA',
     },
     {
-      id: 'hora',
-      numeric: false,
-      disablePadding: false,
-      label: 'HORA',
-    },
-    {
-      id: 'precio',
-      numeric: true,
-      disablePadding: false,
-      label: 'PRECIO',
-    },
-    {
-      id: 'obs',
-      numeric: false,
-      disablePadding: false,
-      label: 'OBSERVACIONES',
-    },
+        id: 'estado',
+        numeric: false,
+        disablePadding: false,
+        label: 'ESTADO',
+      },
+      {
+        id: 'confirmar',
+        numeric: false,
+        disablePadding: false,
+        label: 'CONFIRMAR',
+      },
   ];
   
   function EnhancedTableHead(props) {
@@ -282,7 +210,7 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
             id="tableTitle"
             component="div"
           >
-            LISTA DE SERVICIOS
+            VENTAS PENDIENTES DE CONFIRMACION
           </Typography>
         )}
         {numSelected > 0 ? (
@@ -306,7 +234,7 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
     numSelected: PropTypes.number.isRequired,
   };
   
-  function EnhancedTable() {
+export default function VentasAlerts() {
     const [order, setOrder] = useState('asc');
     const [orderBy, setOrderBy] = useState('calories');
     const [selected, setSelected] = useState([]);
@@ -369,7 +297,7 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
     );
   
     return (
-      <Box sx={{ width: '100%' }}>
+      <Box sx={{ width: '100%', paddingRight:3, paddingLeft: 3 }}>
         <Paper sx={{ width: '100%', mb: 2, overflow: 'hidden' }}>
           <EnhancedTableToolbar numSelected={selected.length} />
           <TableContainer sx={{ maxHeight: 450 }}>
@@ -418,19 +346,17 @@ function createData(id, corte, baño, estetica, cepillado, fecha, hora, precio, 
                         scope="row"
                         align="left"
                       >
-                        {row.nombre} 
+                        {row.id} 
                       </TableCell>
-                      <TableCell align="left">{row.telefono}</TableCell>
-                      <TableCell align="left">{row.mascota}</TableCell>
-                      <TableCell align="left">{ row.corte ? <CheckIcon/> : <CloseIcon/> }</TableCell>
-                      <TableCell align="left">{ row.baño ? <CheckIcon/> : <CloseIcon/> }</TableCell>
-                      <TableCell align="left">{row.estetica ? <CheckIcon/> : <CloseIcon/> }</TableCell>
-                      <TableCell align="left">{row.cepillado ? <CheckIcon/> : <CloseIcon/>}</TableCell>
-                      <TableCell align="left">{row.limpoidos ? <CheckIcon/> : <CloseIcon/>}</TableCell>
+                      <TableCell align="left">{row.productos}</TableCell>
+                      <TableCell align="left">{row.cantidad}</TableCell>
+                      <TableCell align="left">{ row.precio }</TableCell>
+                      <TableCell align="left">{row.total }</TableCell>
                       <TableCell align="left">{row.fecha}</TableCell>
-                      <TableCell align="left">{row.hora}</TableCell>
-                      <TableCell align="center">{row.precio}</TableCell>
-                      <TableCell align="left">{row.obs}</TableCell>
+                      <TableCell align="left">{row.estado}</TableCell>
+                      <TableCell align="left">
+                      <Button variant="outlined" color="success"> confirmar </Button>
+                      </TableCell>
                     </TableRow>
                   );
                 })}

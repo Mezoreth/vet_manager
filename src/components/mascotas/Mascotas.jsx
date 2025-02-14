@@ -26,6 +26,8 @@ import VaccinesIcon from '@mui/icons-material/Vaccines';
 import MedicationLiquidIcon from '@mui/icons-material/MedicationLiquid';
 import EmergencyIcon from '@mui/icons-material/Emergency';
 import MedicalInformationIcon from '@mui/icons-material/MedicalInformation';
+import FilterFramesIcon from '@mui/icons-material/FilterFrames';
+import VoiceChatIcon from '@mui/icons-material/VoiceChat';
 
 import Button from '@mui/material/Button';
 import ButtonGroup from '@mui/material/ButtonGroup';
@@ -288,6 +290,8 @@ function MascotasTabs() {
           <Tab icon={<MedicationLiquidIcon />} label="Desparasitaciones" {...a11yProps(2)} />
           <Tab icon={<EmergencyIcon />} label="Supresor de Celo" {...a11yProps(3)} />
           <Tab icon={<BiotechIcon />} label="Laboratorios" {...a11yProps(4)} />
+          <Tab icon={<VoiceChatIcon />} label="Ecografias" {...a11yProps(5)} />
+          <Tab icon={<FilterFramesIcon />} label="Radiografias" {...a11yProps(6)} />
         </Tabs>
       </Box>
         <CustomTabPanel value={value} index={0}>
@@ -327,7 +331,28 @@ function MascotasTabs() {
           <SuprTable/>
         </CustomTabPanel>
         <CustomTabPanel value={value} index={4}>
-          Lab
+        <ButtonGroup variant="contained"  sx={{marginBottom: 3 }} >
+            <Button color= 'success' size="small" onClick={ handleClickOpenSupr}>Agregar</Button>
+            <Button color= 'info' size="small"  >Modificar</Button>
+            <Button color= 'error' size="small"  >Eliminar</Button>
+          </ButtonGroup>
+          <p>Lab</p>
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={5}>
+        <ButtonGroup variant="contained"  sx={{marginBottom: 3 }} >
+            <Button color= 'success' size="small" onClick={ handleClickOpenSupr}>Agregar</Button>
+            <Button color= 'info' size="small"  >Modificar</Button>
+            <Button color= 'error' size="small"  >Eliminar</Button>
+          </ButtonGroup>
+          <p>Eco</p>
+        </CustomTabPanel>
+        <CustomTabPanel value={value} index={6}>
+        <ButtonGroup variant="contained"  sx={{marginBottom: 3 }} >
+            <Button color= 'success' size="small" onClick={ handleClickOpenSupr}>Agregar</Button>
+            <Button color= 'info' size="small"  >Modificar</Button>
+            <Button color= 'error' size="small"  >Eliminar</Button>
+          </ButtonGroup>
+          <p>Rad</p>
         </CustomTabPanel>
       </CardContent>
       </Card>
@@ -392,10 +417,13 @@ function DenseTable() {
   );
 }
 
+function createDataV( nombre, fini, fref) {
+  return {nombre, fini, fref };
+}
 const rowsV = [
-  createData('Vacuna contra la rabia', '2024-01-10', '2024-01-25'),
-  createData('Vacuna parvovirus', '2024-02-15', '2024-03-01'),
-  createData('Vacuna contra leptospirosis', '2024-03-20', '2024-04-04'),
+  createDataV('Vacuna contra la rabia', '2024-01-10', '2024-01-25'),
+  createDataV('Vacuna parvovirus', '2024-02-15', '2024-03-01'),
+  createDataV('Vacuna contra leptospirosis', '2024-03-20', '2024-04-04'),
 
 ];
 function VacunaTable() {
@@ -412,14 +440,14 @@ function VacunaTable() {
         <TableBody>
           {rowsV.map((row) => (
             <TableRow
-              key={row.name}
+              key={row.nombre}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
             >
               <TableCell component="th" scope="row">
-                {row.name}
+                {row.nombre}
               </TableCell>
-              <TableCell align="left">{row.calories}</TableCell>
-              <TableCell align="right">{row.fat}</TableCell>
+              <TableCell align="left">{row.fini}</TableCell>
+              <TableCell align="right">{row.fref}</TableCell>
             </TableRow>
           ))}
         </TableBody>

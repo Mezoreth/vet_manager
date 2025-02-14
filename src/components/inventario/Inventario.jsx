@@ -57,7 +57,7 @@ function BasicButtons({ handleClick=()=> {} }) {
           <Button color= 'info' startIcon={<CategoryIcon />} onClick={() => handleClick('product')} >PET SHOP</Button>
         </ButtonGroup>
       );
-    }
+  }
 
 function SearchBar() {
       const [type, setType] = useState('codigo');
